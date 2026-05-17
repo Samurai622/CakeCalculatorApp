@@ -62,15 +62,17 @@ namespace CakeCalculatorApp.ViewModels
         public ObservableCollection<Ingredient> OriginalIngredients { get; } = new();
         public ObservableCollection<Ingredient> RecalculatedIngredients { get; } = new();
 
+        [ObservableProperty] private string _newIngredientName = "";
+        [ObservableProperty] private double _newIngredientWeight = 100;
+        
+        public List<string> IngredientTypes { get; } = new() { "Об'ємний (Тісто/Крем)", "Поверхневий (Глазур)" };
+        [ObservableProperty] private string _selectedIngredientType = "Об'ємний (Тісто/Крем)";
+
         public MainWindowViewModel()
         {
             _localDatabase = new LocalJsonDatabaseService();
             _cloudDatabase = new SupabaseDatabaseService("https://your-project.supabase.co", "your-anon-key");
             _calculatorService = new CakeCalculatorService();
-            
-            OriginalIngredients.Add(new VolumeIngredient { Name = "Борошно", Weight = 500, Unit = "г" });
-            OriginalIngredients.Add(new VolumeIngredient { Name = "Цукор", Weight = 200, Unit = "г" });
-            OriginalIngredients.Add(new SurfaceIngredient { Name = "Глазур", Weight = 150, Unit = "г" });
         }
 
         private Shape CreateShape(string shapeType, double p1, double p2, double h)
@@ -123,6 +125,34 @@ namespace CakeCalculatorApp.ViewModels
             var filtered = RecalculatedIngredients.Where(i => i is VolumeIngredient).ToList();
             RecalculatedIngredients.Clear();
             foreach (var item in filtered) RecalculatedIngredients.Add(item);
+        }
+
+        [RelayCommand]
+        private void AddIngredient()
+        {
+            if (string.IsNullOrWhiteSpace(NewIngredientName) || NewIngredientWeight <= 0)
+                return;
+
+            Ingredient newIng;
+            if (SelectedIngredientType == "Поверхневий (Глазур)")
+            {
+                newIng = new SurfaceIngredient { Name = NewIngredientName, Weight = NewIngredientWeight, Unit = "г" };
+            }
+            else
+            {
+                newIng = new VolumeIngredient { Name = NewIngredientName, Weight = NewIngredientWeight, Unit = "г" };
+            }
+
+            OriginalIngredients.Add(newIng);
+            
+            NewIngredientName = "";
+        }
+
+        [RelayCommand]
+        private void ClearIngredients()
+        {
+            OriginalIngredients.Clear();
+            RecalculatedIngredients.Clear();
         }
     }
 }
