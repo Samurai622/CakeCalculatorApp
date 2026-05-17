@@ -17,8 +17,8 @@
     <DockPanel>
         <Menu DockPanel.Dock="Top" Background="#000000ff">
             <MenuItem Header="_Файл">
-                <MenuItem Header="_Відкрити базу..." HotKey="Ctrl+O" InputGesture="Ctrl+O" />
-                <MenuItem Header="_Зберегти" HotKey="Ctrl+S" InputGesture="Ctrl+S" />
+                <MenuItem Header="_Відкрити базу..." HotKey="Ctrl+O" InputGesture="Ctrl+O" Click="OpenFile_Click" />
+                <MenuItem Header="_Зберегти" HotKey="Ctrl+S" InputGesture="Ctrl+S" Click="SaveFile_click" />
                 <Separator/>
                 <MenuItem Header="Вихід" HotKey="Alt+F4" InputGesture="Alt+F4" />
             </MenuItem>
