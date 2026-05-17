@@ -25,5 +25,27 @@ namespace CakeCalculatorApp.ViewModels
         {
             Recipes.Clear();
         }
-    }
+
+        [RelayCommand]
+        private void SortByName()
+        {
+            var sortedList = System.Linq.Enumerable.ToList(System.Linq.Enumerable.OrderBy(Recipes, r => r.Name));
+            Recipes.Clear();
+            foreach (var recipe in sortedList)
+            {
+                Recipes.Add(recipe);
+            }
+        }
+
+        [RelayCommand]
+        private void FilterRoundCakesOnly()
+        {
+            var filteredList = System.Linq.Enumerable.ToList(System.Linq.Enumerable.Where(Recipes, r => r.CakeShape is CylinderShape));
+            Recipes.Clear();
+            foreach (var recipe in filteredList)
+            {
+                Recipes.Add(recipe);
+            }
+        }
+    }  
 }
