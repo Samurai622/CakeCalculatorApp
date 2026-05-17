@@ -37,6 +37,10 @@
             <Separator Width="2" Background="Gray" Margin="5,0"/>
             <Button Content="☁️ Supabase Sync" ToolTip.Tip="Синхронізація з хмарною спільнотою" />
         </StackPanel>
+
+        <Border DockPanel.Dock="Bottom" Background="#007ACC" Padding="10,5">
+            <TextBlock Text="{Binding Greeting}" Foreground="White" FontWeight="Bold" />
+        </Border>
         
         <Grid>
             
