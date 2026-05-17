@@ -30,6 +30,14 @@
                 <MenuItem Header="_Про програму" HotKey="F1" InputGesture="F1" />
             </MenuItem>
         </Menu>
+
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Background="#000000ff" Margin="5">
+            <Button Content="📂 Завантажити" ToolTip.Tip="Відкрити локальну базу рецептів" Margin="0,0,5,0" />
+            <Button Content="💾 Зберегти" ToolTip.Tip="Зберегти поточні рецепти" Margin="0,0,5,0" />
+            <Separator Width="2" Background="Gray" Margin="5,0"/>
+            <Button Content="☁️ Supabase Sync" ToolTip.Tip="Синхронізація з хмарною спільнотою" />
+        </StackPanel>
+        
         <Grid>
             
         </Grid>
