@@ -42,6 +42,27 @@
             <TextBlock Text="{Binding Greeting}" Foreground="White" FontWeight="Bold" />
         </Border>
         
+        <Grid ColumnDefinitions="*,*">
+            <Border Grid.Column="0" BorderBrush="Gray" BorderThickness="0,0,1,0" Margin="10">
+                <DataGrid ItemsSource="{Binding OriginalIngredients}" AutoGenerateColumns="False" IsReadOnly="True" GridLinesVisibility="All" BorderThickness="1" BorderBrush="Gray">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Назва інгредієнта" Binding="{Binding Name}" Width="*"/>
+                        <DataGridTextColumn Header="Вага" Binding="{Binding Weight}" Width="80"/>
+                        <DataGridTextColumn Header="Од." Binding="{Binding Unit}" Width="50"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Border>
+
+            <Border Grid.Column="1" Margin="10">
+                <DataGrid ItemsSource="{Binding RecalculatedIngredients}" AutoGenerateColumns="False" IsReadOnly="True" GridLinesVisibility="All" BorderThickness="1" BorderBrush="Gray">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Назва інгредієнта" Binding="{Binding Name}" Width="*"/>
+                        <DataGridTextColumn Header="Вага" Binding="{Binding Weight}" Width="80"/>
+                        <DataGridTextColumn Header="Од." Binding="{Binding Unit}" Width="50"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Border>
+        </Grid>
         <Grid>
             
         </Grid>
