@@ -23,11 +23,11 @@
                 <MenuItem Header="Вихід" HotKey="Alt+F4" InputGesture="Alt+F4" />
             </MenuItem>
             <MenuItem Header="_Дані">
-                <MenuItem Header="Сортувати (за вагою)" />
-                <MenuItem Header="Фільтрувати (тільки тісто)" />
+                <MenuItem Header="Сортувати (за вагою)" Command="{Binding SortByWeightCommand}"/>
+                <MenuItem Header="Фільтрувати (тільки тісто)" Command="{Binding FilterVolumeOnlyCommand}"/>
             </MenuItem>
             <MenuItem Header="_Довідка">
-                <MenuItem Header="_Про програму" HotKey="F1" InputGesture="F1" />
+                <MenuItem Header="_Про програму" HotKey="F1" InputGesture="F1" Click="About_Click"/>
             </MenuItem>
         </Menu>
 

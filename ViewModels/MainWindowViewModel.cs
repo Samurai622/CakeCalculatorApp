@@ -38,7 +38,7 @@ namespace CakeCalculatorApp.ViewModels
             _calculatorService = new CakeCalculatorService();
             
             // Тестові інгредієнти
-            OriginalIngredients.Add(new VolumeIngredient { Name = "Борошно", Weight = 500, Unit = "г" });
+            OriginalIngredients.Add(new VolumeIngredient { Name = "Борошно", Weight = 50, Unit = "г" });
             OriginalIngredients.Add(new VolumeIngredient { Name = "Цукор", Weight = 200, Unit = "г" });
             OriginalIngredients.Add(new SurfaceIngredient { Name = "Шоколадна глазур", Weight = 150, Unit = "г" });
         }
@@ -73,6 +73,22 @@ namespace CakeCalculatorApp.ViewModels
             {
                 Console.WriteLine($"Помилка: {ex.Message}");
             }
+        }
+
+         [RelayCommand]
+        private void SortByWeight()
+        {
+            var sorted = RecalculatedIngredients.OrderByDescending(i => i.Weight).ToList();
+            RecalculatedIngredients.Clear();
+            foreach (var item in sorted) RecalculatedIngredients.Add(item);
+        }
+
+        [RelayCommand]
+        private void FilterVolumeOnly()
+        {
+            var filtered = RecalculatedIngredients.Where(i => i is VolumeIngredient).ToList();
+            RecalculatedIngredients.Clear();
+            foreach (var item in filtered) RecalculatedIngredients.Add(item);
         }
     }
 }

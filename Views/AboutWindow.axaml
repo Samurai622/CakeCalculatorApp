@@ -1,0 +1,22 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="CakeCalculatorApp.Views.AboutWindow"
+        Title="Про програму"
+        Width="400" Height="300"
+        CanResize="False"
+        WindowStartupLocation="CenterOwner">
+    
+    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="10">
+        <Border Width="100" Height="100" Background="LightGray" CornerRadius="50">
+            <TextBlock Text="🧑‍💻" FontSize="50" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        </Border>
+
+        <TextBlock Text="Калькулятор Тортів (ООП)" FontWeight="Bold" FontSize="18" HorizontalAlignment="Center"/>
+        <TextBlock Text="Версія 1.0" HorizontalAlignment="Center" Foreground="Gray"/>
+        <TextBlock Text="Розробник: Samurai625" HorizontalAlignment="Center"/>
+        <TextBlock Text="Курс 2, Група KC-24" HorizontalAlignment="Center"/>
+        <TextBlock Text="ЧНУ ім. Б. Хмельницького, 2024" HorizontalAlignment="Center"/>
+
+        <Button Content="Закрити" Click="Close_Click" HorizontalAlignment="Center" Margin="0,15,0,0" Width="100" HorizontalContentAlignment="Center"/>
+    </StackPanel>
+</Window>

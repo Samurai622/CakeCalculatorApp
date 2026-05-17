@@ -42,4 +42,10 @@ public partial class MainWindow : Window
             Console.WriteLine($"Збережено файл: {result}");
         }
     }
+
+    private async void About_Click(object? sender, RoutedEventArgs e)
+        {
+            var aboutWindow = new AboutWindow();
+            await aboutWindow.ShowDialog(this);
+        }
 }
