@@ -25,7 +25,7 @@ namespace CakeCalculatorApp.ViewModels
         }
 
         [RelayCommand]
-        private void Calculate(Recipe originalRecpe)
+        private void Calculate(Recipe originalRecipe)
         {
             try
             {

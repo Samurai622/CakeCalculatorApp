@@ -1,4 +1,4 @@
-namespace CackeCalculatopApp.Models
+namespace CakeCalculatorApp.Models
 {
     public interface IScalable
     {

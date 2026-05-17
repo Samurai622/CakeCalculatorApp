@@ -33,7 +33,7 @@ namespace CakeCalculatorApp.Services
 
             if(excludeSurface)
             {
-                ingredientsToProcess = ingredientsToProcess.Where(i => i is not IsSurfaceIngredient);
+                ingredientsToProcess = ingredientsToProcess.Where(i => !(i is SurfaceIngredient));
             }
 
             foreach (var ingredient in ingredientsToProcess)
