@@ -6,7 +6,7 @@ namespace CakeCalculatorApp.Models
         public double Weight { get; set; }
         public string Unit { get; set; } = "g";
 
-        public abstract void Scale( double volumeRatio, double areaRatio);
+        public abstract void Scale( double volumeRatio, double areaRatio, double creamRatio);
 
         public abstract Ingredient Clone();
     }

@@ -9,6 +9,7 @@ namespace CakeCalculatorApp.Models
         public string Name { get; set; } = string.Empty;    
 
         public Shape? CakeShape { get; set; }
+        public int Layers {get; set; } = 1;
 
         public List<Ingredient> Ingredients { get; set; } = new List<Ingredient>();
     }

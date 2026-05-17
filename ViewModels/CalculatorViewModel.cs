@@ -33,7 +33,7 @@ namespace CakeCalculatorApp.ViewModels
 
                 var targetShape = new CuboidShape(TargetLength, TargetWidth, TargetHeight);
 
-                var newRecipe = _calculatorService.CalculateNewRecipe(originalRecipe, targetShape, ExcludeSurface);
+                var newRecipe = _calculatorService.CalculateNewRecipe(originalRecipe, targetShape, 3, ExcludeSurface);
 
                 RecalculatedIngredients.Clear();
                 foreach (var ingredient in newRecipe.Ingredients)

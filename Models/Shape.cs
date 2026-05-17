@@ -7,5 +7,9 @@ namespace CakeCalculatorApp.Models
         public abstract double GetVolume();
 
         public abstract double GetSurfaceArea();
+
+        public abstract double GetBaseArea();
+
+        public abstract double GetHeight();
     }
 }

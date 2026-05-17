@@ -55,6 +55,9 @@ namespace CakeCalculatorApp.ViewModels
         [ObservableProperty] private double _targetParam1 = 25;
         [ObservableProperty] private double _targetParam2 = 20;
         [ObservableProperty] private double _targetHeight = 10;
+
+        [ObservableProperty] private int _originalLayers = 3;
+        [ObservableProperty] private int _targetLayers = 3;
         
         [ObservableProperty] private bool _excludeSurface = false;
 
@@ -65,9 +68,8 @@ namespace CakeCalculatorApp.ViewModels
         [ObservableProperty] private string _newIngredientName = "";
         [ObservableProperty] private double _newIngredientWeight = 100;
         
-        public List<string> IngredientTypes { get; } = new() { "Об'ємний (Тісто/Крем)", "Поверхневий (Глазур)" };
-        [ObservableProperty] private string _selectedIngredientType = "Об'ємний (Тісто/Крем)";
-
+        public List<string> IngredientTypes { get; } = new() { "Тісто (Об'єм)", "Крем між коржами", "Глазур (Поверхня)" };
+        [ObservableProperty] private string _selectedIngredientType = "Тісто (Об'єм)";
         public MainWindowViewModel()
         {
             _localDatabase = new LocalJsonDatabaseService();
@@ -97,10 +99,11 @@ namespace CakeCalculatorApp.ViewModels
                 {
                     Name = "Торт_0",
                     CakeShape = originalShape,
+                    Layers = OriginalLayers,
                     Ingredients = OriginalIngredients.ToList()
                 };
 
-                var newRecipe = _calculatorService.CalculateNewRecipe(originalRecipe, targetShape, ExcludeSurface);
+                var newRecipe = _calculatorService.CalculateNewRecipe(originalRecipe, targetShape, TargetLayers, ExcludeSurface);
 
                 RecalculatedIngredients.Clear();
                 foreach (var item in newRecipe.Ingredients) RecalculatedIngredients.Add(item);
@@ -134,14 +137,12 @@ namespace CakeCalculatorApp.ViewModels
                 return;
 
             Ingredient newIng;
-            if (SelectedIngredientType == "Поверхневий (Глазур)")
-            {
+            if (SelectedIngredientType == "Глазур (Поверхня)")
                 newIng = new SurfaceIngredient { Name = NewIngredientName, Weight = NewIngredientWeight, Unit = "г" };
-            }
+            else if (SelectedIngredientType == "Крем між коржами")
+                newIng = new CreamIngredient { Name = NewIngredientName, Weight = NewIngredientWeight, Unit = "г" };
             else
-            {
                 newIng = new VolumeIngredient { Name = NewIngredientName, Weight = NewIngredientWeight, Unit = "г" };
-            }
 
             OriginalIngredients.Add(newIng);
             

@@ -28,5 +28,15 @@ namespace CakeCalculatorApp.Models
             double sideArea = 2 * Math.PI * Radius * Height;
             return topArea + sideArea;
         }
+
+        public override double GetBaseArea()
+        {
+            return Math.PI * Math.Pow(Radius, 2);
+        }
+
+        public override double GetHeight()
+        {
+            return Height;
+        }
     }
 }

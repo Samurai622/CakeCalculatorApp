@@ -31,5 +31,15 @@ namespace CakeCalculatorApp.Models
             double sideArea2 = 2 * (Width * Height);
             return topArea + sideArea1 + sideArea2;
         }
+
+        public override double GetBaseArea()
+        {
+            return Length * Width;
+        }
+
+        public override double GetHeight()
+        {
+            return Height;
+        }
     }
 }
