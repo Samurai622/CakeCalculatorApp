@@ -21,9 +21,21 @@ namespace CakeCalculatorApp.ViewModels
         }
 
         [RelayCommand]
-        private async LoadRecipes()
+        private async System.Threading.Tasks.Task LoadRecipesAsync()
         {
-            Recipes.Clear();
+            try
+            {
+                var data = await _databaseService.GetRecipesAsync();
+                Recipes.Clear();
+                foreach (var item in data)
+                {
+                    Recipes.Add(item);
+                }
+            }
+            catch (System.Exception ex)
+            {
+                System.Console.WriteLine($"Error loading recipes: {ex.Message}");
+            }
         }
 
         [RelayCommand]
