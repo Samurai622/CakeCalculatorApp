@@ -43,25 +43,63 @@
         </Border>
         
         <Grid ColumnDefinitions="*,*">
-            <Border Grid.Column="0" BorderBrush="Gray" BorderThickness="0,0,1,0" Margin="10">
-                <DataGrid ItemsSource="{Binding OriginalIngredients}" AutoGenerateColumns="False" IsReadOnly="True" GridLinesVisibility="All" BorderThickness="1" BorderBrush="Gray">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="Назва інгредієнта" Binding="{Binding Name}" Width="*"/>
-                        <DataGridTextColumn Header="Вага" Binding="{Binding Weight}" Width="80"/>
-                        <DataGridTextColumn Header="Од." Binding="{Binding Unit}" Width="50"/>
-                    </DataGrid.Columns>
-                </DataGrid>
-            </Border>
+            
+            <Grid Grid.Column="0" RowDefinitions="Auto, Auto, *" Margin="10">
+                <TextBlock Grid.Row="0" Text="🎂 Оригінальний рецепт (Торт_0)" FontWeight="Bold" FontSize="16" Margin="0,0,0,10"/>
+                
+                <StackPanel Grid.Row="1" Margin="0,0,0,10">
+                    <TextBlock Text="Форма: Круглий (Циліндр)" FontWeight="Bold"/>
+                    <Grid ColumnDefinitions="Auto, *, Auto, *" Margin="0,5,0,0">
+                        <TextBlock Grid.Column="0" Text="Радіус (см):" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                        <TextBox Grid.Column="1" Text="{Binding OriginalRadius}" Margin="0,0,15,0"/>
+                        <TextBlock Grid.Column="2" Text="Висота (см):" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                        <TextBox Grid.Column="3" Text="{Binding OriginalHeight}"/>
+                    </Grid>
+                </StackPanel>
 
-            <Border Grid.Column="1" Margin="10">
-                <DataGrid ItemsSource="{Binding RecalculatedIngredients}" AutoGenerateColumns="False" IsReadOnly="True" GridLinesVisibility="All" BorderThickness="1" BorderBrush="Gray">
+                <DataGrid Grid.Row="2" ItemsSource="{Binding OriginalIngredients}" AutoGenerateColumns="False" IsReadOnly="True" GridLinesVisibility="All" BorderThickness="1" BorderBrush="Gray">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Назва інгредієнта" Binding="{Binding Name}" Width="*"/>
                         <DataGridTextColumn Header="Вага" Binding="{Binding Weight}" Width="80"/>
                         <DataGridTextColumn Header="Од." Binding="{Binding Unit}" Width="50"/>
                     </DataGrid.Columns>
                 </DataGrid>
-            </Border>
+            </Grid>
+
+            <Grid Grid.Column="1" RowDefinitions="Auto, Auto, Auto, *" Margin="10">
+                <TextBlock Grid.Row="0" Text="✨ Перерахунок (Торт_1)" FontWeight="Bold" FontSize="16" Margin="0,0,0,10"/>
+                
+                <StackPanel Grid.Row="1" Margin="0,0,0,10">
+                    <TextBlock Text="Нова форма: Прямокутний" FontWeight="Bold"/>
+                    <Grid ColumnDefinitions="*,*,*" Margin="0,5,0,0">
+                        <StackPanel Grid.Column="0" Margin="0,0,5,0">
+                            <TextBlock Text="Довжина:"/>
+                            <TextBox Text="{Binding TargetLength}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Margin="0,0,5,0">
+                            <TextBlock Text="Ширина:"/>
+                            <TextBox Text="{Binding TargetWidth}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="Висота:"/>
+                            <TextBox Text="{Binding TargetHeight}"/>
+                        </StackPanel>
+                    </Grid>
+                    <CheckBox Content="Виключити глазур/покриття?" IsChecked="{Binding ExcludeSurface}" Margin="0,10,0,0"/>
+                </StackPanel>
+
+                <Button Grid.Row="2" Content="🔄 Розрахувати новий рецепт" Command="{Binding CalculateCommand}" 
+                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" 
+                        Background="#28A745" Foreground="White" FontWeight="Bold" Margin="0,0,0,10"/>
+
+                <DataGrid Grid.Row="3" ItemsSource="{Binding RecalculatedIngredients}" AutoGenerateColumns="False" IsReadOnly="True" GridLinesVisibility="All" BorderThickness="1" BorderBrush="Gray">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Назва інгредієнта" Binding="{Binding Name}" Width="*"/>
+                        <DataGridTextColumn Header="Вага" Binding="{Binding Weight}" Width="80"/>
+                        <DataGridTextColumn Header="Од." Binding="{Binding Unit}" Width="50"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
         </Grid>
         <Grid>
             
