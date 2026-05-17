@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -20,11 +21,19 @@ namespace CakeCalculatorApp.ViewModels
 
         public IDatabaseService CurrentDatabase => UseCloudDatabase ? _cloudDatabase : _localDatabase;
 
-        [ObservableProperty] private double _originalRadius = 10;
+        public List<string> AvailableShapes { get; } = new() { "Кругла", "Прямокутна" };
+        
+        [ObservableProperty] private string _selectedOriginalShape = "Кругла";
+        [ObservableProperty] private string _selectedTargetShape = "Прямокутна";
+
+        [ObservableProperty] private double _originalParam1 = 20;
+        [ObservableProperty] private double _originalParam2 = 15; 
         [ObservableProperty] private double _originalHeight = 10;
-        [ObservableProperty] private double _targetLength = 20;
-        [ObservableProperty] private double _targetWidth = 15;
+
+        [ObservableProperty] private double _targetParam1 = 25;
+        [ObservableProperty] private double _targetParam2 = 20;
         [ObservableProperty] private double _targetHeight = 10;
+        
         [ObservableProperty] private bool _excludeSurface = false;
 
         public ObservableCollection<Recipe> CatalogRecipes { get; } = new();
@@ -37,15 +46,19 @@ namespace CakeCalculatorApp.ViewModels
             _cloudDatabase = new SupabaseDatabaseService("https://your-project.supabase.co", "your-anon-key");
             _calculatorService = new CakeCalculatorService();
             
-            // Тестові інгредієнти
-            OriginalIngredients.Add(new VolumeIngredient { Name = "Борошно", Weight = 50, Unit = "г" });
+            OriginalIngredients.Add(new VolumeIngredient { Name = "Борошно", Weight = 500, Unit = "г" });
             OriginalIngredients.Add(new VolumeIngredient { Name = "Цукор", Weight = 200, Unit = "г" });
-            OriginalIngredients.Add(new SurfaceIngredient { Name = "Шоколадна глазур", Weight = 150, Unit = "г" });
+            OriginalIngredients.Add(new SurfaceIngredient { Name = "Глазур", Weight = 150, Unit = "г" });
         }
 
-        partial void OnUseCloudDatabaseChanged(bool value)
+        private Shape CreateShape(string shapeType, double p1, double p2, double h)
         {
-            Greeting = value ? "Режим: Хмарна БД (Supabase)" : "Режим: Локальний файл (JSON)";
+            return shapeType switch
+            {
+                "Кругла" => new CylinderShape(p1, h),
+                "Прямокутна" => new CuboidShape(p1, p2, h),
+                _ => new CylinderShape(p1, h)
+            };
         }
 
         [RelayCommand]
@@ -53,21 +66,20 @@ namespace CakeCalculatorApp.ViewModels
         {
             try
             {
+                Shape originalShape = CreateShape(SelectedOriginalShape, OriginalParam1, OriginalParam2, OriginalHeight);
+                Shape targetShape = CreateShape(SelectedTargetShape, TargetParam1, TargetParam2, TargetHeight);
+
                 var originalRecipe = new Recipe
                 {
                     Name = "Торт_0",
-                    CakeShape = new CylinderShape(OriginalRadius, OriginalHeight),
+                    CakeShape = originalShape,
                     Ingredients = OriginalIngredients.ToList()
                 };
 
-                var targetShape = new CuboidShape(TargetLength, TargetWidth, TargetHeight);
                 var newRecipe = _calculatorService.CalculateNewRecipe(originalRecipe, targetShape, ExcludeSurface);
 
                 RecalculatedIngredients.Clear();
-                foreach (var item in newRecipe.Ingredients)
-                {
-                    RecalculatedIngredients.Add(item);
-                }
+                foreach (var item in newRecipe.Ingredients) RecalculatedIngredients.Add(item);
             }
             catch (Exception ex)
             {
@@ -75,7 +87,7 @@ namespace CakeCalculatorApp.ViewModels
             }
         }
 
-         [RelayCommand]
+        [RelayCommand]
         private void SortByWeight()
         {
             var sorted = RecalculatedIngredients.OrderByDescending(i => i.Weight).ToList();
