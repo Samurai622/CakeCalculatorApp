@@ -7,14 +7,31 @@
         x:Class="CakeCalculatorApp.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
-        Title="CakeCalculatorApp">
+        Title="Калькулятор Тортів (ООП)"
+        Width="900" Height="600">
 
     <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-
+    <DockPanel>
+        <Menu DockPanel.Dock="Top" Background="#000000ff">
+            <MenuItem Header="_Файл">
+                <MenuItem Header="_Відкрити базу..." HotKey="Ctrl+O" InputGesture="Ctrl+O" />
+                <MenuItem Header="_Зберегти" HotKey="Ctrl+S" InputGesture="Ctrl+S" />
+                <Separator/>
+                <MenuItem Header="Вихід" HotKey="Alt+F4" InputGesture="Alt+F4" />
+            </MenuItem>
+            <MenuItem Header="_Дані">
+                <MenuItem Header="Сортувати (за вагою)" />
+                <MenuItem Header="Фільтрувати (тільки тісто)" />
+            </MenuItem>
+            <MenuItem Header="_Довідка">
+                <MenuItem Header="_Про програму" HotKey="F1" InputGesture="F1" />
+            </MenuItem>
+        </Menu>
+        <Grid>
+            
+        </Grid>
+    </DockPanel>
 </Window>
