@@ -23,8 +23,30 @@ namespace CakeCalculatorApp.ViewModels
 
         public List<string> AvailableShapes { get; } = new() { "Кругла", "Прямокутна" };
         
-        [ObservableProperty] private string _selectedOriginalShape = "Кругла";
-        [ObservableProperty] private string _selectedTargetShape = "Прямокутна";
+        private string _selectedOriginalShape = "Кругла";
+        public string SelectedOriginalShape
+        {
+            get => _selectedOriginalShape;
+            set
+            {
+                SetProperty(ref _selectedOriginalShape, value);
+                OnPropertyChanged(nameof(IsOriginalWidthVisible));
+            }
+        }
+
+        private string _selectedTargetShape = "Прямокутна";
+        public string SelectedTargetShape
+        {
+            get => _selectedTargetShape;
+            set
+            {
+                SetProperty(ref _selectedTargetShape, value);
+                OnPropertyChanged(nameof(IsTargetWidthVisible));
+            }
+        }
+
+        public bool IsOriginalWidthVisible => SelectedOriginalShape == "Прямокутна";
+        public bool IsTargetWidthVisible => SelectedTargetShape == "Прямокутна";
 
         [ObservableProperty] private double _originalParam1 = 20;
         [ObservableProperty] private double _originalParam2 = 15; 

@@ -42,17 +42,14 @@
             <TextBlock Text="{Binding Greeting}" Foreground="White" FontWeight="Bold" />
         </Border>
         
-        <!-- Головна робоча область (дві колонки) -->
         <Grid ColumnDefinitions="*,*">
             
-            <!-- ЛІВА КОЛОНКА -->
             <Grid Grid.Column="0" RowDefinitions="Auto, Auto, *" Margin="10">
                 <TextBlock Grid.Row="0" Text="🎂 Оригінальний рецепт" FontWeight="Bold" FontSize="16" Margin="0,0,0,10"/>
                 
                 <StackPanel Grid.Row="1" Margin="0,0,0,10">
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
                         <TextBlock Text="Форма:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,10,0"/>
-                        <!-- ВИПАДАЮЧИЙ СПИСОК -->
                         <ComboBox ItemsSource="{Binding AvailableShapes}" SelectedItem="{Binding SelectedOriginalShape}" Width="150"/>
                     </StackPanel>
                     
@@ -63,8 +60,8 @@
                         <TextBlock Grid.Column="2" Text="Висота:" VerticalAlignment="Center" Margin="0,0,5,0"/>
                         <TextBox Grid.Column="3" Text="{Binding OriginalHeight}"/>
                     </Grid>
-                    <Grid ColumnDefinitions="Auto, *" Margin="0,5,0,0">
-                        <TextBlock Grid.Column="0" Text="Ширина (для прям.):" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                    <Grid ColumnDefinitions="Auto, *" Margin="0,5,0,0" IsVisible="{Binding IsOriginalWidthVisible}">
+                        <TextBlock Grid.Column="0" Text="Ширина (см):" VerticalAlignment="Center" Margin="0,0,5,0"/>
                         <TextBox Grid.Column="1" Text="{Binding OriginalParam2}" />
                     </Grid>
                 </StackPanel>
@@ -78,14 +75,12 @@
                 </DataGrid>
             </Grid>
 
-            <!-- ПРАВА КОЛОНКА -->
             <Grid Grid.Column="1" RowDefinitions="Auto, Auto, Auto, *" Margin="10">
                 <TextBlock Grid.Row="0" Text="✨ Новий торт" FontWeight="Bold" FontSize="16" Margin="0,0,0,10"/>
                 
                 <StackPanel Grid.Row="1" Margin="0,0,0,10">
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
                         <TextBlock Text="Нова форма:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,10,0"/>
-                        <!-- ВИПАДАЮЧИЙ СПИСОК -->
                         <ComboBox ItemsSource="{Binding AvailableShapes}" SelectedItem="{Binding SelectedTargetShape}" Width="150"/>
                     </StackPanel>
 
@@ -96,8 +91,8 @@
                         <TextBlock Grid.Column="2" Text="Висота:" VerticalAlignment="Center" Margin="0,0,5,0"/>
                         <TextBox Grid.Column="3" Text="{Binding TargetHeight}"/>
                     </Grid>
-                    <Grid ColumnDefinitions="Auto, *" Margin="0,5,0,0">
-                        <TextBlock Grid.Column="0" Text="Ширина (для прям.):" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                    <Grid ColumnDefinitions="Auto, *" Margin="0,5,0,0" IsVisible="{Binding IsTargetWidthVisible}">
+                        <TextBlock Grid.Column="0" Text="Ширина (см):" VerticalAlignment="Center" Margin="0,0,5,0"/>
                         <TextBox Grid.Column="1" Text="{Binding TargetParam2}" />
                     </Grid>
                     
