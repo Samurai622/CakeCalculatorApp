@@ -68,6 +68,9 @@ namespace CakeCalculatorApp.ViewModels
         [ObservableProperty] private string _newIngredientName = "";
         [ObservableProperty] private double _newIngredientWeight = 100;
         
+        public List<string> AvailableUnits { get; } = new() { "г", "кг", "мл", "л", "шт", "ч.л.", "ст.л.", "стакан" };
+        [ObservableProperty] private string _selectedUnit = "г";
+        
         public List<string> IngredientTypes { get; } = new() { "Тісто (Об'єм)", "Крем між коржами", "Глазур (Поверхня)" };
         [ObservableProperty] private string _selectedIngredientType = "Тісто (Об'єм)";
         public MainWindowViewModel()
@@ -138,11 +141,11 @@ namespace CakeCalculatorApp.ViewModels
 
             Ingredient newIng;
             if (SelectedIngredientType == "Глазур (Поверхня)")
-                newIng = new SurfaceIngredient { Name = NewIngredientName, Weight = NewIngredientWeight, Unit = "г" };
+                newIng = new SurfaceIngredient { Name = NewIngredientName, Weight = NewIngredientWeight, Unit = SelectedUnit };
             else if (SelectedIngredientType == "Крем між коржами")
-                newIng = new CreamIngredient { Name = NewIngredientName, Weight = NewIngredientWeight, Unit = "г" };
+                newIng = new CreamIngredient { Name = NewIngredientName, Weight = NewIngredientWeight, Unit = SelectedUnit };
             else
-                newIng = new VolumeIngredient { Name = NewIngredientName, Weight = NewIngredientWeight, Unit = "г" };
+                newIng = new VolumeIngredient { Name = NewIngredientName, Weight = NewIngredientWeight, Unit = SelectedUnit };
 
             OriginalIngredients.Add(newIng);
             

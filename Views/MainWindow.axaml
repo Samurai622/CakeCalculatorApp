@@ -74,9 +74,10 @@
                     <StackPanel>
                         <TextBlock Text="Додати інгредієнт:" FontWeight="Bold" Margin="0,0,0,5"/>
                         
-                        <Grid ColumnDefinitions="*, 80" Margin="0,0,0,5">
-                            <TextBox Grid.Column="0" Watermark="Назва (напр. Борошно)" Text="{Binding NewIngredientName}" Margin="0,0,5,0"/>
-                            <TextBox Grid.Column="1" Watermark="Вага (г)" Text="{Binding NewIngredientWeight}"/>
+                        <Grid ColumnDefinitions="*, 80, 90" Margin="0,0,0,5">
+                            <TextBox Grid.Column="0" Watermark="Назва (напр. Яйця)" Text="{Binding NewIngredientName}" Margin="0,0,5,0"/>
+                            <TextBox Grid.Column="1" Watermark="Кількість" Text="{Binding NewIngredientWeight}" Margin="0,0,5,0"/>
+                            <ComboBox Grid.Column="2" ItemsSource="{Binding AvailableUnits}" SelectedItem="{Binding SelectedUnit}" HorizontalAlignment="Stretch"/>
                         </Grid>
                         
                         <Grid ColumnDefinitions="*, Auto">
@@ -90,8 +91,8 @@
                 <DataGrid Grid.Row="3" ItemsSource="{Binding OriginalIngredients}" AutoGenerateColumns="False" IsReadOnly="True" GridLinesVisibility="All" BorderThickness="1" BorderBrush="Gray">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Інгредієнт" Binding="{Binding Name}" Width="*"/>
-                        <DataGridTextColumn Header="Вага" Binding="{Binding Weight}" Width="80"/>
-                        <DataGridTextColumn Header="Од." Binding="{Binding Unit}" Width="50"/>
+                        <DataGridTextColumn Header="Кіл-ть" Binding="{Binding Weight}" Width="60"/>
+                        <DataGridTextColumn Header="Од." Binding="{Binding Unit}" Width="60"/>
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>
