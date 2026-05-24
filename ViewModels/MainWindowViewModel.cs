@@ -205,7 +205,6 @@ namespace CakeCalculatorApp.ViewModels
             UpdateTotals();
         }
 
-        // КОМАНДА: Завантажити дані вибраного інгредієнта в поля вводу
         [RelayCommand]
         private void LoadForEdit()
         {
@@ -215,7 +214,6 @@ namespace CakeCalculatorApp.ViewModels
                 NewIngredientWeight = SelectedOriginalIngredient.Weight;
                 SelectedUnit = SelectedOriginalIngredient.Unit;
 
-                // Визначаємо тип інгредієнта для ComboBox
                 if (SelectedOriginalIngredient is SurfaceIngredient)
                     SelectedIngredientType = "Глазур (Поверхня)";
                 else if (SelectedOriginalIngredient is CreamIngredient)
@@ -246,6 +244,76 @@ namespace CakeCalculatorApp.ViewModels
             
             NewIngredientName = "";
             UpdateTotals();
+        }
+
+        public async System.Threading.Tasks.Task SaveRecipeToFileAsync(string filePath)
+        {
+            try
+            {
+                if (OriginalIngredients.Count == 0) return;
+
+                var fileService = new LocalJsonDatabaseService(filePath);
+
+                var recipeToSave = new Recipe
+                {
+                    Name = "Мій збережений рецепт",
+                    CakeShape = CreateShape(SelectedOriginalShape, OriginalParam1, OriginalParam2, OriginalHeight),
+                    Layers = OriginalLayers,
+                    Ingredients = OriginalIngredients.ToList()
+                };
+
+                await fileService.SaveRecipeAsync(recipeToSave);
+                Greeting = $"Рецепт успішно збережено у {System.IO.Path.GetFileName(filePath)}";
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Помилка збереження: {ex.Message}");
+                Greeting = "Помилка збереження файлу!";
+            }
+        }
+
+        public async System.Threading.Tasks.Task LoadRecipeFromFileAsync(string filePath)
+        {
+            try
+            {
+                var fileService = new LocalJsonDatabaseService(filePath);
+                var recipes = (await fileService.GetRecipesAsync()).ToList();
+
+                if (recipes.Count > 0)
+                {
+                    var loadedRecipe = recipes[0];
+
+                    if (loadedRecipe.CakeShape is CylinderShape cyl)
+                    {
+                        SelectedOriginalShape = "Кругла";
+                        OriginalParam1 = cyl.Radius;
+                        OriginalHeight = cyl.Height;
+                    }
+                    else if (loadedRecipe.CakeShape is CuboidShape cub)
+                    {
+                        SelectedOriginalShape = "Прямокутна";
+                        OriginalParam1 = cub.Length;
+                        OriginalParam2 = cub.Width;
+                        OriginalHeight = cub.Height;
+                    }
+
+                    OriginalLayers = loadedRecipe.Layers;
+
+                    OriginalIngredients.Clear();
+                    foreach (var ing in loadedRecipe.Ingredients)
+                    {
+                        OriginalIngredients.Add(ing);
+                    }
+
+                    UpdateTotals();
+                    Greeting = $"Рецепт завантажено з {System.IO.Path.GetFileName(filePath)}";
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Помилка завантаження: {ex.Message}");
+                Greeting = "Помилка завантаження файлу!";
+            }
         }
     }
 }

@@ -1,7 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
-using System;
+using CakeCalculatorApp.ViewModels;
 
 namespace CakeCalculatorApp.Views
 {
@@ -12,10 +12,12 @@ namespace CakeCalculatorApp.Views
             InitializeComponent();
         }
 
+        private MainWindowViewModel? ViewModel => DataContext as MainWindowViewModel;
+
         private async void OpenFile_Click(object? sender, RoutedEventArgs e)
         {
             var topLevel = TopLevel.GetTopLevel(this);
-            if (topLevel == null) return;
+            if (topLevel == null || ViewModel == null) return;
 
             var files = await topLevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
             {
@@ -26,14 +28,14 @@ namespace CakeCalculatorApp.Views
 
             if (files.Count >= 1)
             {
-                Console.WriteLine($"Обрано файл: {files[0].Path}");
+                await ViewModel.LoadRecipeFromFileAsync(files[0].Path.LocalPath);
             }
         }
 
         private async void SaveFile_Click(object? sender, RoutedEventArgs e)
         {
             var topLevel = TopLevel.GetTopLevel(this);
-            if (topLevel == null) return;
+            if (topLevel == null || ViewModel == null) return;
 
             var file = await topLevel.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
             {
@@ -44,7 +46,7 @@ namespace CakeCalculatorApp.Views
 
             if (file != null)
             {
-                Console.WriteLine($"Збережено у файл: {file.Path}");
+                await ViewModel.SaveRecipeToFileAsync(file.Path.LocalPath);
             }
         }
 
