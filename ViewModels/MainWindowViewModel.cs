@@ -80,7 +80,20 @@ namespace CakeCalculatorApp.ViewModels
 
         [ObservableProperty] private double _originalTotal;
         [ObservableProperty] private double _recalculatedTotal;
-        [ObservableProperty] private Ingredient? _selectedOriginalIngredient;
+        
+        private Ingredient? _selectedOriginalIngredient;
+        public Ingredient? SelectedOriginalIngredient
+        {
+            get => _selectedOriginalIngredient;
+            set
+            {
+                SetProperty(ref _selectedOriginalIngredient, value);
+                OnPropertyChanged(nameof(HasSelectedIngredient));
+            }
+        }
+
+        public bool HasSelectedIngredient => SelectedOriginalIngredient != null;
+        public bool HasIngredients => OriginalIngredients.Count > 0;
 
         public MainWindowViewModel()
         {
@@ -103,6 +116,8 @@ namespace CakeCalculatorApp.ViewModels
         {
             OriginalTotal = Math.Round(OriginalIngredients.Sum(i => i.Weight), 1);
             RecalculatedTotal = Math.Round(RecalculatedIngredients.Sum(i => i.Weight), 1);
+            
+            OnPropertyChanged(nameof(HasIngredients));
         }
 
         [RelayCommand]
