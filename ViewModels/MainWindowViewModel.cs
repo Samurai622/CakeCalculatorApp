@@ -31,6 +31,7 @@ namespace CakeCalculatorApp.ViewModels
             {
                 SetProperty(ref _selectedOriginalShape, value);
                 OnPropertyChanged(nameof(IsOriginalWidthVisible));
+                OnPropertyChanged(nameof(OriginalParam1Label));
             }
         }
 
@@ -42,11 +43,14 @@ namespace CakeCalculatorApp.ViewModels
             {
                 SetProperty(ref _selectedTargetShape, value);
                 OnPropertyChanged(nameof(IsTargetWidthVisible));
+                OnPropertyChanged(nameof(TargetParam1Label));
             }
         }
 
         public bool IsOriginalWidthVisible => SelectedOriginalShape == "Прямокутна";
         public bool IsTargetWidthVisible => SelectedTargetShape == "Прямокутна";
+        public string OriginalParam1Label => SelectedOriginalShape == "Кругла" ? "Радіус (см):" : "Довжина (см):";
+        public string TargetParam1Label => SelectedTargetShape == "Кругла" ? "Радіус (см):" : "Довжина (см):";
 
         [ObservableProperty] private double _originalParam1 = 20;
         [ObservableProperty] private double _originalParam2 = 15; 

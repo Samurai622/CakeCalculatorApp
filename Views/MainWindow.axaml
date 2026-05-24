@@ -55,9 +55,9 @@
                     </StackPanel>
                     
                     <Grid ColumnDefinitions="Auto, *, Auto, *" Margin="0,5,0,0">
-                        <TextBlock Grid.Column="0" Text="Радіус/Довж:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                        <TextBlock Grid.Column="0" Text="{Binding OriginalParam1Label}" VerticalAlignment="Center" Margin="0,0,5,0"/>
                         <TextBox Grid.Column="1" Text="{Binding OriginalParam1}" Margin="0,0,10,0"/>
-                        <TextBlock Grid.Column="2" Text="Висота:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                        <TextBlock Grid.Column="2" Text="Висота (см):" VerticalAlignment="Center" Margin="0,0,5,0"/>
                         <TextBox Grid.Column="3" Text="{Binding OriginalHeight}"/>
                     </Grid>
                     <Grid ColumnDefinitions="Auto, *" Margin="0,5,0,0" IsVisible="{Binding IsOriginalWidthVisible}">
@@ -117,9 +117,9 @@
                     </StackPanel>
 
                     <Grid ColumnDefinitions="Auto, *, Auto, *" Margin="0,5,0,0">
-                        <TextBlock Grid.Column="0" Text="Радіус/Довж:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                        <TextBlock Grid.Column="0" Text="{Binding TargetParam1Label}" VerticalAlignment="Center" Margin="0,0,5,0"/>
                         <TextBox Grid.Column="1" Text="{Binding TargetParam1}" Margin="0,0,10,0"/>
-                        <TextBlock Grid.Column="2" Text="Висота:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                        <TextBlock Grid.Column="2" Text="Висота (см):" VerticalAlignment="Center" Margin="0,0,5,0"/>
                         <TextBox Grid.Column="3" Text="{Binding TargetHeight}"/>
                     </Grid>
                     <Grid ColumnDefinitions="Auto, *" Margin="0,5,0,0" IsVisible="{Binding IsTargetWidthVisible}">
