@@ -1,11 +1,15 @@
 using System;
+using System.Text.Json.Serialization;
 
 namespace CakeCalculatorApp.Models
 {
     public class CylinderShape : Shape
     {
-        public double Radius { get; }
-        public double Height { get; }
+        public double Radius { get; set; }
+        public double Height { get; set; }
+
+        [JsonConstructor]
+        public CylinderShape() { }
 
         public CylinderShape(double radius, double height)
         {
@@ -14,29 +18,12 @@ namespace CakeCalculatorApp.Models
 
             Radius = radius;
             Height = height;
-            Name = $"Round (d={radius * 2} cm, h={height} cm)";
+            Name = $"Кругла (d={radius * 2} см, h={height} см)";
         }
 
-        public override double GetVolume()
-        {
-            return Math.PI * Math.Pow(Radius, 2) * Height;
-        }
-
-        public override double GetSurfaceArea()
-        {
-            double topArea = Math.PI * Math.Pow(Radius, 2);
-            double sideArea = 2 * Math.PI * Radius * Height;
-            return topArea + sideArea;
-        }
-
-        public override double GetBaseArea()
-        {
-            return Math.PI * Math.Pow(Radius, 2);
-        }
-
-        public override double GetHeight()
-        {
-            return Height;
-        }
+        public override double GetVolume() => Math.PI * Math.Pow(Radius, 2) * Height;
+        public override double GetSurfaceArea() => (Math.PI * Math.Pow(Radius, 2)) + (2 * Math.PI * Radius * Height);
+        public override double GetBaseArea() => Math.PI * Math.Pow(Radius, 2);
+        public override double GetHeight() => Height;
     }
 }

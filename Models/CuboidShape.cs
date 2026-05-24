@@ -1,12 +1,16 @@
 using System;
+using System.Text.Json.Serialization;
 
 namespace CakeCalculatorApp.Models
 {
     public class CuboidShape : Shape
     {
-        public double Length { get; }
-        public double Width { get; }
-        public double Height { get; }
+        public double Length { get; set; }
+        public double Width { get; set; }
+        public double Height { get; set; }
+
+        [JsonConstructor]
+        public CuboidShape() { }
 
         public CuboidShape(double length, double width, double height)
         {
@@ -16,30 +20,12 @@ namespace CakeCalculatorApp.Models
             Length = length;
             Width = width;
             Height = height;
-            Name = $"Rectangular ({length} x {width} cm, h={height} cm)";
+            Name = $"Прямокутна ({length} x {width} см, h={height} см)";
         }
 
-        public override double GetVolume()
-        {
-            return Length * Width * Height;
-        }
-
-        public override double GetSurfaceArea()
-        {
-            double topArea = Length * Width;
-            double sideArea1 = 2 * (Length * Height);
-            double sideArea2 = 2 * (Width * Height);
-            return topArea + sideArea1 + sideArea2;
-        }
-
-        public override double GetBaseArea()
-        {
-            return Length * Width;
-        }
-
-        public override double GetHeight()
-        {
-            return Height;
-        }
+        public override double GetVolume() => Length * Width * Height;
+        public override double GetSurfaceArea() => (Length * Width) + 2 * (Length * Height) + 2 * (Width * Height);
+        public override double GetBaseArea() => Length * Width;
+        public override double GetHeight() => Height;
     }
 }
