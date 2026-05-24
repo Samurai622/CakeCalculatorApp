@@ -3,19 +3,21 @@
         xmlns:vm="using:CakeCalculatorApp.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="650"
+        mc:Ignorable="d" d:DesignWidth="1100" d:DesignHeight="850"
         x:Class="CakeCalculatorApp.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
-        Title="Калькулятор Тортів (ООП)"
-        Width="950" Height="650">
+        Title="Cake Calculator ✨"
+        Width="1150" Height="850"
+        MinHeight="700" MinWidth="900"
+        Background="#FAF6F0">
 
     <Design.DataContext>
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 
     <DockPanel>
-        <Menu DockPanel.Dock="Top">
+        <Menu DockPanel.Dock="Top" Background="#F2E6D8">
             <MenuItem Header="_Файл">
                 <MenuItem Header="{Binding LoadButtonText}" HotKey="Ctrl+O" InputGesture="Ctrl+O" Click="ActionLoad_Click" />
                 <MenuItem Header="{Binding SaveButtonText}" HotKey="Ctrl+S" InputGesture="Ctrl+S" Click="ActionSave_Click" />
@@ -31,144 +33,153 @@
             </MenuItem>
         </Menu>
 
-        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Background="#1AFFFFFF" Margin="5">
-            <Button Content="{Binding LoadButtonText}" Margin="0,0,5,0" Click="ActionLoad_Click" />
-            <Button Content="{Binding SaveButtonText}" Margin="0,0,5,0" Click="ActionSave_Click" />
-            
-            <Separator Width="2" Background="Gray" Margin="5,0"/>
-            
-            <Button Content="{Binding SyncModeButtonText}" Command="{Binding ToggleDatabaseModeCommand}" FontWeight="Bold" />
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Background="#FFFFFF" Margin="10,5,10,10">
+            <Button Content="{Binding LoadButtonText}" Margin="0,0,10,0" Click="ActionLoad_Click" Background="Transparent" Foreground="#8C6B5D"/>
+            <Button Content="{Binding SaveButtonText}" Margin="0,0,10,0" Click="ActionSave_Click" Background="Transparent" Foreground="#8C6B5D"/>
+            <Separator Width="1" Background="#EADDCB" Margin="10,5"/>
+            <Button Content="{Binding SyncModeButtonText}" Command="{Binding ToggleDatabaseModeCommand}" FontWeight="Bold" Background="Transparent" Foreground="#D48B8B"/>
         </StackPanel>
 
-        <Border DockPanel.Dock="Bottom" Background="#007ACC" Padding="10,5">
+        <Border DockPanel.Dock="Bottom" Background="#D48B8B" Padding="15,8">
             <TextBlock Text="{Binding Greeting}" Foreground="White" FontWeight="Bold" />
         </Border>
         
-        <Grid ColumnDefinitions="*,*">
+        <Grid ColumnDefinitions="*,*" Margin="15,0,15,15" ColumnSpacing="20">
             
-            <Grid Grid.Column="0" RowDefinitions="Auto, Auto, Auto, *, Auto" Margin="10,10,20,10">
-                <TextBlock Grid.Row="0" Text="🎂 База рецептів" FontWeight="Bold" FontSize="16" Margin="0,0,0,10"/>
-                
-                <StackPanel Grid.Row="1" Margin="0,0,0,15">
-                    <ComboBox ItemsSource="{Binding AvailableRecipes}" SelectedItem="{Binding SelectedRecipe}" HorizontalAlignment="Stretch" Margin="0,0,0,15">
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding Name}"/>
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
-                    </ComboBox>
-
-                    <StackPanel IsEnabled="{Binding IsCustomRecipe}">
-                        <Grid ColumnDefinitions="Auto, *" Margin="0,0,0,10">
-                            <TextBlock Grid.Column="0" Text="Назва торта:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,10,0"/>
-                            <TextBox Grid.Column="1" Text="{Binding OriginalRecipeName}" Watermark="Наприклад: Мій Медовик"/>
-                        </Grid>
-
-                        <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
-                            <TextBlock Text="Форма:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,10,0"/>
-                            <ComboBox ItemsSource="{Binding AvailableShapes}" SelectedItem="{Binding SelectedOriginalShape}" Width="150"/>
-                        </StackPanel>
-                        
-                        <Grid ColumnDefinitions="Auto, *, Auto, *" Margin="0,5,0,0">
-                            <TextBlock Grid.Column="0" Text="{Binding OriginalParam1Label}" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                            <TextBox Grid.Column="1" Text="{Binding OriginalParam1}" Margin="0,0,10,0"/>
-                            <TextBlock Grid.Column="2" Text="Висота (см):" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                            <TextBox Grid.Column="3" Text="{Binding OriginalHeight}"/>
-                        </Grid>
-                        <Grid ColumnDefinitions="Auto, *" Margin="0,5,0,0" IsVisible="{Binding IsOriginalWidthVisible}">
-                            <TextBlock Grid.Column="0" Text="Ширина (см):" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                            <TextBox Grid.Column="1" Text="{Binding OriginalParam2}" />
-                        </Grid>
-                        <Grid ColumnDefinitions="Auto, *" Margin="0,5,0,0">
-                            <TextBlock Grid.Column="0" Text="Кількість коржів:" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                            <TextBox Grid.Column="1" Text="{Binding OriginalLayers}" />
-                        </Grid>
-                    </StackPanel>
-                </StackPanel>
-
-                <Border Grid.Row="2" IsEnabled="{Binding IsCustomRecipe}" Background="#1AFFFFFF" BorderBrush="Gray" BorderThickness="1" CornerRadius="5" Padding="10" Margin="0,0,0,10">
-                    <StackPanel>
-                        <TextBlock Text="Додати інгредієнт:" FontWeight="Bold" Margin="0,0,0,5"/>
-                        
-                        <Grid ColumnDefinitions="*, 80, 70" Margin="0,0,0,5">
-                            <TextBox Grid.Column="0" Watermark="Назва (напр. Яйця)" Text="{Binding NewIngredientName}" Margin="0,0,5,0"/>
-                            <TextBox Grid.Column="1" Watermark="Кіл-ть" Text="{Binding NewIngredientWeight}" Margin="0,0,5,0"/>
-                            <ComboBox Grid.Column="2" ItemsSource="{Binding AvailableUnits}" SelectedItem="{Binding SelectedUnit}" HorizontalAlignment="Stretch"/>
-                        </Grid>
-                        
-                        <Grid ColumnDefinitions="*, Auto, Auto" Margin="0,0,0,10">
-                            <ComboBox Grid.Column="0" ItemsSource="{Binding IngredientTypes}" SelectedItem="{Binding SelectedIngredientType}" HorizontalAlignment="Stretch" Margin="0,0,5,0"/>
-                            
-                            <Button Grid.Column="1" Content="💾 Зберегти зміни" Command="{Binding UpdateIngredientCommand}" IsVisible="{Binding HasSelectedIngredient}" Background="#FFC107" Foreground="Black" FontWeight="Bold" Margin="0,0,5,0"/>
-                            
-                            <Button Grid.Column="2" Content="➕ Додати" Command="{Binding AddIngredientCommand}" Background="#007ACC" Foreground="White" FontWeight="Bold"/>
-                        </Grid>
-
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="5">
-                            
-                            <Button Content="✏️ Редагувати" Command="{Binding LoadForEditCommand}" IsVisible="{Binding HasSelectedIngredient}" Background="#17A2B8" Foreground="White"/>
-                            
-                            <Button Content="🗑 Видалити" Command="{Binding DeleteSelectedIngredientCommand}" IsVisible="{Binding HasSelectedIngredient}" Background="#6C757D" Foreground="White"/>
-                            
-                            <Button Content="❌ Очистити" Command="{Binding ClearIngredientsCommand}" IsVisible="{Binding HasIngredients}" Background="#DC3545" Foreground="White"/>
-                        </StackPanel>
-                    </StackPanel>
-                </Border>
-
-                <DataGrid Grid.Row="3" ItemsSource="{Binding OriginalIngredients}" SelectedItem="{Binding SelectedOriginalIngredient}" AutoGenerateColumns="False" IsReadOnly="True" GridLinesVisibility="All" BorderThickness="1" BorderBrush="Gray">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="Інгредієнт" Binding="{Binding Name}" Width="*"/>
-                        <DataGridTextColumn Header="Тип" Binding="{Binding IngredientTypeLabel}" Width="120"/>
-                        <DataGridTextColumn Header="Кіл-ть" Binding="{Binding Weight}" Width="60"/>
-                        <DataGridTextColumn Header="Од." Binding="{Binding Unit}" Width="50"/>
-                    </DataGrid.Columns>
-                </DataGrid>
-
-                <TextBlock Grid.Row="4" Text="{Binding OriginalTotal, StringFormat='Підсумок: {0} од.'}" FontWeight="Bold" FontSize="14" HorizontalAlignment="Right" Margin="0,5,0,0"/>
-            </Grid>
-
-            <Grid Grid.Column="1" RowDefinitions="Auto, Auto, Auto, *, Auto" Margin="10">
-                <TextBlock Grid.Row="0" Text="✨ Новий торт" FontWeight="Bold" FontSize="16" Margin="0,0,0,10"/>
-                
-                <StackPanel Grid.Row="1" Margin="0,0,0,15">
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
-                        <TextBlock Text="Нова форма:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,10,0"/>
-                        <ComboBox ItemsSource="{Binding AvailableShapes}" SelectedItem="{Binding SelectedTargetShape}" Width="150"/>
-                    </StackPanel>
-
-                    <Grid ColumnDefinitions="Auto, *, Auto, *" Margin="0,5,0,0">
-                        <TextBlock Grid.Column="0" Text="{Binding TargetParam1Label}" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                        <TextBox Grid.Column="1" Text="{Binding TargetParam1}" Margin="0,0,10,0"/>
-                        <TextBlock Grid.Column="2" Text="Висота (см):" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                        <TextBox Grid.Column="3" Text="{Binding TargetHeight}"/>
-                    </Grid>
-                    <Grid ColumnDefinitions="Auto, *" Margin="0,5,0,0" IsVisible="{Binding IsTargetWidthVisible}">
-                        <TextBlock Grid.Column="0" Text="Ширина (см):" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                        <TextBox Grid.Column="1" Text="{Binding TargetParam2}" />
-                    </Grid>
-                    <Grid ColumnDefinitions="Auto, *" Margin="0,5,0,0">
-                        <TextBlock Grid.Column="0" Text="Кількість коржів:" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                        <TextBox Grid.Column="1" Text="{Binding TargetLayers}" />
-                    </Grid>
+            <Border Grid.Column="0" Classes="card">
+                <Grid RowDefinitions="Auto, Auto, Auto, *, Auto">
+                    <TextBlock Grid.Row="0" Text="🍰 Базовий рецепт" Classes="h1"/>
                     
-                    <CheckBox Content="Виключити глазур/покриття?" IsChecked="{Binding ExcludeSurface}" Margin="0,10,0,0"/>
-                </StackPanel>
+                    <StackPanel Grid.Row="1" Spacing="10" Margin="0,0,0,15">
+                        
+                        <Grid ColumnDefinitions="140, *">
+                            <TextBlock Grid.Column="0" Text="Збережені рецепти:" VerticalAlignment="Center" Foreground="#8C6B5D" FontWeight="Bold"/>
+                            <ComboBox Grid.Column="1" ItemsSource="{Binding AvailableRecipes}" SelectedItem="{Binding SelectedRecipe}" HorizontalAlignment="Stretch">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate><TextBlock Text="{Binding Name}"/></DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </Grid>
 
-                <Button Grid.Row="2" Content="🔄 Розрахувати новий рецепт" Command="{Binding CalculateCommand}" 
-                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" 
-                        Background="#28A745" Foreground="White" FontWeight="Bold" FontSize="16" Padding="10" Margin="0,0,0,10"/>
+                        <StackPanel IsEnabled="{Binding IsCustomRecipe}" Spacing="10">
+                            <Grid ColumnDefinitions="140, *">
+                                <TextBlock Grid.Column="0" Text="Назва торта:" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#5C4033"/>
+                                <TextBox Grid.Column="1" Text="{Binding OriginalRecipeName}" Watermark="Введіть назву..."/>
+                            </Grid>
 
-                <DataGrid Grid.Row="3" ItemsSource="{Binding RecalculatedIngredients}" AutoGenerateColumns="False" IsReadOnly="True" GridLinesVisibility="All" BorderThickness="1" BorderBrush="Gray">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="Інгредієнт" Binding="{Binding Name}" Width="*"/>
-                        <DataGridTextColumn Header="Тип" Binding="{Binding IngredientTypeLabel}" Width="120"/>
-                        <DataGridTextColumn Header="Кіл-ть" Binding="{Binding Weight}" Width="60"/>
-                        <DataGridTextColumn Header="Од." Binding="{Binding Unit}" Width="50"/>
-                    </DataGrid.Columns>
-                </DataGrid>
+                            <Grid ColumnDefinitions="140, *">
+                                <TextBlock Grid.Column="0" Text="Форма:" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#5C4033"/>
+                                <ComboBox Grid.Column="1" ItemsSource="{Binding AvailableShapes}" SelectedItem="{Binding SelectedOriginalShape}" HorizontalAlignment="Stretch"/>
+                            </Grid>
+                            
+                            <Grid RowDefinitions="Auto, Auto" ColumnDefinitions="*, *" RowSpacing="10" ColumnSpacing="10">
+                                <Grid Grid.Row="0" Grid.Column="0" ColumnDefinitions="Auto, *">
+                                    <TextBlock Grid.Column="0" Text="{Binding OriginalParam1Label}" VerticalAlignment="Center" Foreground="#5C4033" Margin="0,0,5,0" Width="100"/>
+                                    <TextBox Grid.Column="1" Text="{Binding OriginalParam1}"/>
+                                </Grid>
+                                <Grid Grid.Row="0" Grid.Column="1" ColumnDefinitions="Auto, *">
+                                    <TextBlock Grid.Column="0" Text="Коржів:" VerticalAlignment="Center" Foreground="#5C4033" Margin="0,0,5,0" Width="90"/>
+                                    <TextBox Grid.Column="1" Text="{Binding OriginalLayers}" />
+                                </Grid>
+                                
+                                <Grid Grid.Row="1" Grid.Column="0" ColumnDefinitions="Auto, *">
+                                    <TextBlock Grid.Column="0" Text="Висота (см):" VerticalAlignment="Center" Foreground="#5C4033" Margin="0,0,5,0" Width="100"/>
+                                    <TextBox Grid.Column="1" Text="{Binding OriginalHeight}"/>
+                                </Grid>
+                                <Grid Grid.Row="1" Grid.Column="1" ColumnDefinitions="Auto, *" IsVisible="{Binding IsOriginalWidthVisible}">
+                                    <TextBlock Grid.Column="0" Text="Ширина (см):" VerticalAlignment="Center" Foreground="#5C4033" Margin="0,0,5,0" Width="90"/>
+                                    <TextBox Grid.Column="1" Text="{Binding OriginalParam2}"/>
+                                </Grid>
+                            </Grid>
+                        </StackPanel>
+                    </StackPanel>
 
-                <TextBlock Grid.Row="4" Text="{Binding RecalculatedTotal, StringFormat='Підсумок: {0} од.'}" FontWeight="Bold" FontSize="14" HorizontalAlignment="Right" Margin="0,5,0,0"/>
-            </Grid>
+                    <Border Grid.Row="2" IsEnabled="{Binding IsCustomRecipe}" Background="#FCF9F2" BorderBrush="#EADDCB" BorderThickness="1" CornerRadius="15" Padding="15" Margin="0,0,0,15">
+                        <StackPanel Spacing="10">
+                            <TextBlock Text="Додати / Редагувати інгредієнт:" FontWeight="Bold" Foreground="#8C6B5D"/>
+                            
+                            <Grid ColumnDefinitions="*, 80, 70" Margin="0,0,0,5">
+                                <TextBox Grid.Column="0" Watermark="Назва (напр. Яйця)" Text="{Binding NewIngredientName}" Margin="0,0,5,0"/>
+                                <TextBox Grid.Column="1" Watermark="Кіл-ть" Text="{Binding NewIngredientWeight}" Margin="0,0,5,0"/>
+                                <ComboBox Grid.Column="2" ItemsSource="{Binding AvailableUnits}" SelectedItem="{Binding SelectedUnit}" HorizontalAlignment="Stretch"/>
+                            </Grid>
+                            
+                            <Grid ColumnDefinitions="*, Auto, Auto" Margin="0,0,0,10">
+                                <ComboBox Grid.Column="0" ItemsSource="{Binding IngredientTypes}" SelectedItem="{Binding SelectedIngredientType}" HorizontalAlignment="Stretch" Margin="0,0,5,0"/>
+                                
+                                <Button Grid.Column="1" Content="💾 Зберегти зміни" Command="{Binding UpdateIngredientCommand}" IsVisible="{Binding HasSelectedIngredient}" Background="#FFD580" Foreground="Black" FontWeight="Bold" Margin="0,0,5,0"/>
+                                
+                                <Button Grid.Column="2" Content="➕ Додати" Classes="secondary" Command="{Binding AddIngredientCommand}" FontWeight="Bold"/>
+                            </Grid>
+
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="5">
+                                <Button Content="✏️ Редагувати" Command="{Binding LoadForEditCommand}" IsVisible="{Binding HasSelectedIngredient}" Background="#A2D2FF" Foreground="White"/>
+                                <Button Content="🗑 Видалити" Classes="danger" Command="{Binding DeleteSelectedIngredientCommand}" IsVisible="{Binding HasSelectedIngredient}" Foreground="White"/>
+                                <Button Content="❌ Очистити" Classes="danger" Command="{Binding ClearIngredientsCommand}" IsVisible="{Binding HasIngredients}" Foreground="White"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <DataGrid Grid.Row="3" ItemsSource="{Binding OriginalIngredients}" SelectedItem="{Binding SelectedOriginalIngredient}" AutoGenerateColumns="False" IsReadOnly="True" GridLinesVisibility="Horizontal">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Інгредієнт" Binding="{Binding Name}" Width="*"/>
+                            <DataGridTextColumn Header="Тип" Binding="{Binding IngredientTypeLabel}" Width="120"/>
+                            <DataGridTextColumn Header="Кіл-ть" Binding="{Binding Weight}" Width="60"/>
+                            <DataGridTextColumn Header="Од." Binding="{Binding Unit}" Width="50"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <TextBlock Grid.Row="4" Text="{Binding OriginalTotal, StringFormat='Підсумок: {0} од.'}" FontWeight="Bold" FontSize="14" Foreground="#8C6B5D" HorizontalAlignment="Right" Margin="0,10,0,0"/>
+                </Grid>
+            </Border>
+
+            <Border Grid.Column="1" Classes="card">
+                <Grid RowDefinitions="Auto, Auto, Auto, *, Auto">
+                    <TextBlock Grid.Row="0" Text="✨ Перерахунок" Classes="h1"/>
+                    
+                    <StackPanel Grid.Row="1" Spacing="10" Margin="0,0,0,20">
+                        <Grid ColumnDefinitions="140, *">
+                            <TextBlock Grid.Column="0" Text="Нова форма:" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#5C4033"/>
+                            <ComboBox Grid.Column="1" ItemsSource="{Binding AvailableShapes}" SelectedItem="{Binding SelectedTargetShape}" HorizontalAlignment="Stretch"/>
+                        </Grid>
+
+                        <Grid RowDefinitions="Auto, Auto" ColumnDefinitions="*, *" RowSpacing="10" ColumnSpacing="10">
+                            <Grid Grid.Row="0" Grid.Column="0" ColumnDefinitions="Auto, *">
+                                <TextBlock Grid.Column="0" Text="{Binding TargetParam1Label}" VerticalAlignment="Center" Foreground="#5C4033" Margin="0,0,5,0" Width="100"/>
+                                <TextBox Grid.Column="1" Text="{Binding TargetParam1}"/>
+                            </Grid>
+                            <Grid Grid.Row="0" Grid.Column="1" ColumnDefinitions="Auto, *">
+                                <TextBlock Grid.Column="0" Text="Коржів:" VerticalAlignment="Center" Foreground="#5C4033" Margin="0,0,5,0" Width="90"/>
+                                <TextBox Grid.Column="1" Text="{Binding TargetLayers}" />
+                            </Grid>
+                            
+                            <Grid Grid.Row="1" Grid.Column="0" ColumnDefinitions="Auto, *">
+                                <TextBlock Grid.Column="0" Text="Висота (см):" VerticalAlignment="Center" Foreground="#5C4033" Margin="0,0,5,0" Width="100"/>
+                                <TextBox Grid.Column="1" Text="{Binding TargetHeight}"/>
+                            </Grid>
+                            <Grid Grid.Row="1" Grid.Column="1" ColumnDefinitions="Auto, *" IsVisible="{Binding IsTargetWidthVisible}">
+                                <TextBlock Grid.Column="0" Text="Ширина (см):" VerticalAlignment="Center" Foreground="#5C4033" Margin="0,0,5,0" Width="90"/>
+                                <TextBox Grid.Column="1" Text="{Binding TargetParam2}" />
+                            </Grid>
+                        </Grid>
+                        
+                        <CheckBox Content="Без глазурі (виключити поверхневі інгредієнти)" IsChecked="{Binding ExcludeSurface}" Foreground="#8C6B5D" FontWeight="SemiBold" Margin="0,10,0,0"/>
+                    </StackPanel>
+
+                    <Button Grid.Row="2" Content="✨ Розрахувати пропорції" Classes="accent" Command="{Binding CalculateCommand}" HorizontalAlignment="Stretch" Margin="0,0,0,20"/>
+
+                    <DataGrid Grid.Row="3" ItemsSource="{Binding RecalculatedIngredients}" AutoGenerateColumns="False" IsReadOnly="True" GridLinesVisibility="Horizontal">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Інгредієнт" Binding="{Binding Name}" Width="*"/>
+                            <DataGridTextColumn Header="Тип" Binding="{Binding IngredientTypeLabel}" Width="120"/>
+                            <DataGridTextColumn Header="Кіл-ть" Binding="{Binding Weight}" Width="60"/>
+                            <DataGridTextColumn Header="Од." Binding="{Binding Unit}" Width="50"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <TextBlock Grid.Row="4" Text="{Binding RecalculatedTotal, StringFormat='Підсумок: {0} од.'}" FontWeight="Bold" FontSize="14" Foreground="#8C6B5D" HorizontalAlignment="Right" Margin="0,10,0,0"/>
+                </Grid>
+            </Border>
         </Grid>
     </DockPanel>
 </Window>

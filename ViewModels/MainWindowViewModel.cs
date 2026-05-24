@@ -126,7 +126,7 @@ namespace CakeCalculatorApp.ViewModels
             _cloudDatabase = new SupabaseDatabaseService(supabaseUrl, supabaseKey);
             _calculatorService = new CakeCalculatorService();
 
-            InitializeRecipeListAsync();
+            _ = InitializeRecipeListAsync();
         }
 
         private async System.Threading.Tasks.Task InitializeRecipeListAsync()
