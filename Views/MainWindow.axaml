@@ -47,31 +47,46 @@
         <Grid ColumnDefinitions="*,*">
             
             <Grid Grid.Column="0" RowDefinitions="Auto, Auto, Auto, *, Auto" Margin="10,10,20,10">
-                <TextBlock Grid.Row="0" Text="🎂 Оригінальний рецепт" FontWeight="Bold" FontSize="16" Margin="0,0,0,10"/>
+                <TextBlock Grid.Row="0" Text="🎂 База рецептів" FontWeight="Bold" FontSize="16" Margin="0,0,0,10"/>
                 
                 <StackPanel Grid.Row="1" Margin="0,0,0,15">
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
-                        <TextBlock Text="Форма:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,10,0"/>
-                        <ComboBox ItemsSource="{Binding AvailableShapes}" SelectedItem="{Binding SelectedOriginalShape}" Width="150"/>
+                    <ComboBox ItemsSource="{Binding AvailableRecipes}" SelectedItem="{Binding SelectedRecipe}" HorizontalAlignment="Stretch" Margin="0,0,0,15">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Name}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+
+                    <StackPanel IsEnabled="{Binding IsCustomRecipe}">
+                        <Grid ColumnDefinitions="Auto, *" Margin="0,0,0,10">
+                            <TextBlock Grid.Column="0" Text="Назва торта:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,10,0"/>
+                            <TextBox Grid.Column="1" Text="{Binding OriginalRecipeName}" Watermark="Наприклад: Мій Медовик"/>
+                        </Grid>
+
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                            <TextBlock Text="Форма:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,10,0"/>
+                            <ComboBox ItemsSource="{Binding AvailableShapes}" SelectedItem="{Binding SelectedOriginalShape}" Width="150"/>
+                        </StackPanel>
+                        
+                        <Grid ColumnDefinitions="Auto, *, Auto, *" Margin="0,5,0,0">
+                            <TextBlock Grid.Column="0" Text="{Binding OriginalParam1Label}" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                            <TextBox Grid.Column="1" Text="{Binding OriginalParam1}" Margin="0,0,10,0"/>
+                            <TextBlock Grid.Column="2" Text="Висота (см):" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                            <TextBox Grid.Column="3" Text="{Binding OriginalHeight}"/>
+                        </Grid>
+                        <Grid ColumnDefinitions="Auto, *" Margin="0,5,0,0" IsVisible="{Binding IsOriginalWidthVisible}">
+                            <TextBlock Grid.Column="0" Text="Ширина (см):" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                            <TextBox Grid.Column="1" Text="{Binding OriginalParam2}" />
+                        </Grid>
+                        <Grid ColumnDefinitions="Auto, *" Margin="0,5,0,0">
+                            <TextBlock Grid.Column="0" Text="Кількість коржів:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                            <TextBox Grid.Column="1" Text="{Binding OriginalLayers}" />
+                        </Grid>
                     </StackPanel>
-                    
-                    <Grid ColumnDefinitions="Auto, *, Auto, *" Margin="0,5,0,0">
-                        <TextBlock Grid.Column="0" Text="{Binding OriginalParam1Label}" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                        <TextBox Grid.Column="1" Text="{Binding OriginalParam1}" Margin="0,0,10,0"/>
-                        <TextBlock Grid.Column="2" Text="Висота (см):" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                        <TextBox Grid.Column="3" Text="{Binding OriginalHeight}"/>
-                    </Grid>
-                    <Grid ColumnDefinitions="Auto, *" Margin="0,5,0,0" IsVisible="{Binding IsOriginalWidthVisible}">
-                        <TextBlock Grid.Column="0" Text="Ширина (см):" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                        <TextBox Grid.Column="1" Text="{Binding OriginalParam2}" />
-                    </Grid>
-                    <Grid ColumnDefinitions="Auto, *" Margin="0,5,0,0">
-                        <TextBlock Grid.Column="0" Text="Кількість коржів:" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                        <TextBox Grid.Column="1" Text="{Binding OriginalLayers}" />
-                    </Grid>
                 </StackPanel>
 
-                <Border Grid.Row="2" Background="#1AFFFFFF" BorderBrush="Gray" BorderThickness="1" CornerRadius="5" Padding="10" Margin="0,0,0,10">
+                <Border Grid.Row="2" IsEnabled="{Binding IsCustomRecipe}" Background="#1AFFFFFF" BorderBrush="Gray" BorderThickness="1" CornerRadius="5" Padding="10" Margin="0,0,0,10">
                     <StackPanel>
                         <TextBlock Text="Додати інгредієнт:" FontWeight="Bold" Margin="0,0,0,5"/>
                         

@@ -23,19 +23,25 @@ namespace CakeCalculatorApp.ViewModels
         public string LoadButtonText => UseCloudDatabase ? "☁️ Завантажити з хмари" : "📂 Відкрити файл";
         public string SaveButtonText => UseCloudDatabase ? "🚀 Відправити в хмару" : "💾 Зберегти файл";
 
-        [RelayCommand]
-        private void ToggleDatabaseMode()
+        public IDatabaseService CurrentDatabase => UseCloudDatabase ? _cloudDatabase : _localDatabase;
+
+        [ObservableProperty] private string _originalRecipeName = "";
+        
+        public ObservableCollection<Recipe> AvailableRecipes { get; } = new();
+        
+        private Recipe? _selectedRecipe;
+        public Recipe? SelectedRecipe
         {
-            UseCloudDatabase = !UseCloudDatabase;
-            
-            OnPropertyChanged(nameof(SyncModeButtonText));
-            OnPropertyChanged(nameof(LoadButtonText));
-            OnPropertyChanged(nameof(SaveButtonText));
-            
-            Greeting = UseCloudDatabase ? "Режим: Хмарна БД (Supabase)" : "Режим: Локальний файл (JSON)";
+            get => _selectedRecipe;
+            set
+            {
+                SetProperty(ref _selectedRecipe, value);
+                OnRecipeSelected();
+            }
         }
 
-        public IDatabaseService CurrentDatabase => UseCloudDatabase ? _cloudDatabase : _localDatabase;
+        [ObservableProperty] private bool _isCustomRecipe = true;
+
 
         public List<string> AvailableShapes { get; } = new() { "Кругла", "Прямокутна" };
         
@@ -81,7 +87,6 @@ namespace CakeCalculatorApp.ViewModels
         
         [ObservableProperty] private bool _excludeSurface = false;
 
-        public ObservableCollection<Recipe> CatalogRecipes { get; } = new();
         public ObservableCollection<Ingredient> OriginalIngredients { get; } = new();
         public ObservableCollection<Ingredient> RecalculatedIngredients { get; } = new();
 
@@ -120,6 +125,76 @@ namespace CakeCalculatorApp.ViewModels
             
             _cloudDatabase = new SupabaseDatabaseService(supabaseUrl, supabaseKey);
             _calculatorService = new CakeCalculatorService();
+
+            InitializeRecipeListAsync();
+        }
+
+        private async System.Threading.Tasks.Task InitializeRecipeListAsync()
+        {
+            await LoadRecipesIntoDropdownAsync();
+        }
+
+        private async System.Threading.Tasks.Task LoadRecipesIntoDropdownAsync()
+        {
+            try
+            {
+                AvailableRecipes.Clear();
+                
+                var customChoice = new Recipe { Name = "🎂 Створити свій рецепт..." };
+                AvailableRecipes.Add(customChoice);
+
+                var recipesFromDb = await CurrentDatabase.GetRecipesAsync();
+                
+                foreach (var recipe in recipesFromDb)
+                {
+                    AvailableRecipes.Add(recipe);
+                }
+
+                SelectedRecipe = AvailableRecipes[0];
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Помилка завантаження списку: {ex.Message}");
+            }
+        }
+
+        private void OnRecipeSelected()
+        {
+            if (SelectedRecipe == null) return;
+
+            if (SelectedRecipe.Name == "🎂 Створити свій рецепт...")
+            {
+                IsCustomRecipe = true;
+                OriginalRecipeName = "";
+                ClearIngredients();
+            }
+            else
+            {
+                IsCustomRecipe = false;
+                OriginalRecipeName = SelectedRecipe.Name;
+
+                OriginalIngredients.Clear();
+                foreach (var ing in SelectedRecipe.Ingredients)
+                {
+                    OriginalIngredients.Add(ing.Clone());
+                }
+
+                if (SelectedRecipe.CakeShape is CylinderShape cyl)
+                {
+                    SelectedOriginalShape = "Кругла";
+                    OriginalParam1 = cyl.Radius;
+                    OriginalHeight = cyl.Height;
+                }
+                else if (SelectedRecipe.CakeShape is CuboidShape cub)
+                {
+                    SelectedOriginalShape = "Прямокутна";
+                    OriginalParam1 = cub.Length;
+                    OriginalParam2 = cub.Width;
+                    OriginalHeight = cub.Height;
+                }
+                OriginalLayers = SelectedRecipe.Layers;
+                UpdateTotals();
+            }
         }
 
         private Shape CreateShape(string shapeType, double p1, double p2, double h)
@@ -136,8 +211,22 @@ namespace CakeCalculatorApp.ViewModels
         {
             OriginalTotal = Math.Round(OriginalIngredients.Sum(i => i.Weight), 1);
             RecalculatedTotal = Math.Round(RecalculatedIngredients.Sum(i => i.Weight), 1);
-            
             OnPropertyChanged(nameof(HasIngredients));
+        }
+
+
+        [RelayCommand]
+        private async System.Threading.Tasks.Task ToggleDatabaseModeAsync()
+        {
+            UseCloudDatabase = !UseCloudDatabase;
+            
+            OnPropertyChanged(nameof(SyncModeButtonText));
+            OnPropertyChanged(nameof(LoadButtonText));
+            OnPropertyChanged(nameof(SaveButtonText));
+            
+            Greeting = UseCloudDatabase ? "Режим: Хмарна БД (Supabase)" : "Режим: Локальний файл (JSON)";
+
+            await LoadRecipesIntoDropdownAsync();
         }
 
         [RelayCommand]
@@ -150,7 +239,7 @@ namespace CakeCalculatorApp.ViewModels
 
                 var originalRecipe = new Recipe
                 {
-                    Name = "Торт_0",
+                    Name = string.IsNullOrWhiteSpace(OriginalRecipeName) ? "Без назви" : OriginalRecipeName,
                     CakeShape = originalShape,
                     Layers = OriginalLayers,
                     Ingredients = OriginalIngredients.ToList()
@@ -202,7 +291,6 @@ namespace CakeCalculatorApp.ViewModels
                 newIng = new VolumeIngredient { Name = NewIngredientName, Weight = NewIngredientWeight, Unit = SelectedUnit };
 
             OriginalIngredients.Add(newIng);
-            
             NewIngredientName = "";
             UpdateTotals(); 
         }
@@ -261,11 +349,11 @@ namespace CakeCalculatorApp.ViewModels
                 updatedIng = new VolumeIngredient { Name = NewIngredientName, Weight = NewIngredientWeight, Unit = SelectedUnit };
 
             OriginalIngredients[index] = updatedIng;
-            
             NewIngredientName = "";
             UpdateTotals();
         }
 
+        
         public async System.Threading.Tasks.Task SaveRecipeToFileAsync(string filePath)
         {
             try
@@ -276,7 +364,7 @@ namespace CakeCalculatorApp.ViewModels
 
                 var recipeToSave = new Recipe
                 {
-                    Name = "Мій збережений рецепт",
+                    Name = string.IsNullOrWhiteSpace(OriginalRecipeName) ? "Збережений рецепт" : OriginalRecipeName,
                     CakeShape = CreateShape(SelectedOriginalShape, OriginalParam1, OriginalParam2, OriginalHeight),
                     Layers = OriginalLayers,
                     Ingredients = OriginalIngredients.ToList()
@@ -284,6 +372,8 @@ namespace CakeCalculatorApp.ViewModels
 
                 await fileService.SaveRecipeAsync(recipeToSave);
                 Greeting = $"Рецепт успішно збережено у {System.IO.Path.GetFileName(filePath)}";
+                
+                await LoadRecipesIntoDropdownAsync();
             }
             catch (Exception ex)
             {
@@ -301,31 +391,7 @@ namespace CakeCalculatorApp.ViewModels
 
                 if (recipes.Count > 0)
                 {
-                    var loadedRecipe = recipes[0];
-
-                    if (loadedRecipe.CakeShape is CylinderShape cyl)
-                    {
-                        SelectedOriginalShape = "Кругла";
-                        OriginalParam1 = cyl.Radius;
-                        OriginalHeight = cyl.Height;
-                    }
-                    else if (loadedRecipe.CakeShape is CuboidShape cub)
-                    {
-                        SelectedOriginalShape = "Прямокутна";
-                        OriginalParam1 = cub.Length;
-                        OriginalParam2 = cub.Width;
-                        OriginalHeight = cub.Height;
-                    }
-
-                    OriginalLayers = loadedRecipe.Layers;
-
-                    OriginalIngredients.Clear();
-                    foreach (var ing in loadedRecipe.Ingredients)
-                    {
-                        OriginalIngredients.Add(ing);
-                    }
-
-                    UpdateTotals();
+                    SelectedRecipe = recipes.Last();
                     Greeting = $"Рецепт завантажено з {System.IO.Path.GetFileName(filePath)}";
                 }
             }
@@ -342,37 +408,8 @@ namespace CakeCalculatorApp.ViewModels
             try
             {
                 Greeting = "Завантаження з хмари...";
-                var recipes = (await _cloudDatabase.GetRecipesAsync()).ToList();
-
-                if (recipes.Count > 0)
-                {
-                    var loadedRecipe = recipes.Last();
-
-                    if (loadedRecipe.CakeShape is CylinderShape cyl)
-                    {
-                        SelectedOriginalShape = "Кругла";
-                        OriginalParam1 = cyl.Radius;
-                        OriginalHeight = cyl.Height;
-                    }
-                    else if (loadedRecipe.CakeShape is CuboidShape cub)
-                    {
-                        SelectedOriginalShape = "Прямокутна";
-                        OriginalParam1 = cub.Length;
-                        OriginalParam2 = cub.Width;
-                        OriginalHeight = cub.Height;
-                    }
-                    OriginalLayers = loadedRecipe.Layers;
-
-                    OriginalIngredients.Clear();
-                    foreach (var ing in loadedRecipe.Ingredients) OriginalIngredients.Add(ing);
-                    
-                    UpdateTotals();
-                    Greeting = "Успішно завантажено з Supabase!";
-                }
-                else
-                {
-                    Greeting = "Хмарна база порожня.";
-                }
+                await LoadRecipesIntoDropdownAsync(); 
+                Greeting = "Синхронізовано з Supabase!";
             }
             catch (Exception ex)
             {
@@ -391,7 +428,7 @@ namespace CakeCalculatorApp.ViewModels
 
                 var recipeToSave = new Recipe
                 {
-                    Name = "Рецепт зі спільноти",
+                    Name = string.IsNullOrWhiteSpace(OriginalRecipeName) ? "Рецепт зі спільноти" : OriginalRecipeName,
                     CakeShape = CreateShape(SelectedOriginalShape, OriginalParam1, OriginalParam2, OriginalHeight),
                     Layers = OriginalLayers,
                     Ingredients = OriginalIngredients.ToList()
@@ -399,6 +436,8 @@ namespace CakeCalculatorApp.ViewModels
 
                 await _cloudDatabase.SaveRecipeAsync(recipeToSave);
                 Greeting = "Успішно відправлено у Supabase!";
+                
+                await LoadRecipesIntoDropdownAsync();
             }
             catch (Exception ex)
             {
