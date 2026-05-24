@@ -70,9 +70,14 @@ namespace CakeCalculatorApp.ViewModels
         
         public List<string> AvailableUnits { get; } = new() { "г", "кг", "мл", "л", "шт", "ч.л.", "ст.л.", "стакан" };
         [ObservableProperty] private string _selectedUnit = "г";
-        
+
         public List<string> IngredientTypes { get; } = new() { "Тісто (Об'єм)", "Крем між коржами", "Глазур (Поверхня)" };
         [ObservableProperty] private string _selectedIngredientType = "Тісто (Об'єм)";
+
+        [ObservableProperty] private double _originalTotal;
+        [ObservableProperty] private double _recalculatedTotal;
+        [ObservableProperty] private Ingredient? _selectedOriginalIngredient;
+
         public MainWindowViewModel()
         {
             _localDatabase = new LocalJsonDatabaseService();
@@ -88,6 +93,12 @@ namespace CakeCalculatorApp.ViewModels
                 "Прямокутна" => new CuboidShape(p1, p2, h),
                 _ => new CylinderShape(p1, h)
             };
+        }
+
+        private void UpdateTotals()
+        {
+            OriginalTotal = Math.Round(OriginalIngredients.Sum(i => i.Weight), 1);
+            RecalculatedTotal = Math.Round(RecalculatedIngredients.Sum(i => i.Weight), 1);
         }
 
         [RelayCommand]
@@ -110,6 +121,8 @@ namespace CakeCalculatorApp.ViewModels
 
                 RecalculatedIngredients.Clear();
                 foreach (var item in newRecipe.Ingredients) RecalculatedIngredients.Add(item);
+                
+                UpdateTotals();
             }
             catch (Exception ex)
             {
@@ -123,6 +136,7 @@ namespace CakeCalculatorApp.ViewModels
             var sorted = RecalculatedIngredients.OrderByDescending(i => i.Weight).ToList();
             RecalculatedIngredients.Clear();
             foreach (var item in sorted) RecalculatedIngredients.Add(item);
+            UpdateTotals();
         }
 
         [RelayCommand]
@@ -131,6 +145,7 @@ namespace CakeCalculatorApp.ViewModels
             var filtered = RecalculatedIngredients.Where(i => i is VolumeIngredient).ToList();
             RecalculatedIngredients.Clear();
             foreach (var item in filtered) RecalculatedIngredients.Add(item);
+            UpdateTotals();
         }
 
         [RelayCommand]
@@ -150,6 +165,17 @@ namespace CakeCalculatorApp.ViewModels
             OriginalIngredients.Add(newIng);
             
             NewIngredientName = "";
+            UpdateTotals(); 
+        }
+
+        [RelayCommand]
+        private void DeleteSelectedIngredient()
+        {
+            if (SelectedOriginalIngredient != null)
+            {
+                OriginalIngredients.Remove(SelectedOriginalIngredient);
+                UpdateTotals();
+            }
         }
 
         [RelayCommand]
@@ -157,6 +183,7 @@ namespace CakeCalculatorApp.ViewModels
         {
             OriginalIngredients.Clear();
             RecalculatedIngredients.Clear();
+            UpdateTotals();
         }
     }
 }

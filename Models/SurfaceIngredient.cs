@@ -13,5 +13,7 @@ namespace CakeCalculatorApp.Models
         {
             return new  SurfaceIngredient { Name = this.Name, Weight = this.Weight, Unit = this.Unit };
         }
+
+        public override string IngredientTypeLabel => "Глазур (Поверхня)";
     }
 }
