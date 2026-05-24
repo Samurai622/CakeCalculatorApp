@@ -189,5 +189,48 @@ namespace CakeCalculatorApp.ViewModels
             RecalculatedIngredients.Clear();
             UpdateTotals();
         }
+
+        // КОМАНДА: Завантажити дані вибраного інгредієнта в поля вводу
+        [RelayCommand]
+        private void LoadForEdit()
+        {
+            if (SelectedOriginalIngredient != null)
+            {
+                NewIngredientName = SelectedOriginalIngredient.Name;
+                NewIngredientWeight = SelectedOriginalIngredient.Weight;
+                SelectedUnit = SelectedOriginalIngredient.Unit;
+
+                // Визначаємо тип інгредієнта для ComboBox
+                if (SelectedOriginalIngredient is SurfaceIngredient)
+                    SelectedIngredientType = "Глазур (Поверхня)";
+                else if (SelectedOriginalIngredient is CreamIngredient)
+                    SelectedIngredientType = "Крем між коржами";
+                else
+                    SelectedIngredientType = "Тісто (Об'єм)";
+            }
+        }
+
+        [RelayCommand]
+        private void UpdateIngredient()
+        {
+            if (SelectedOriginalIngredient == null || string.IsNullOrWhiteSpace(NewIngredientName) || NewIngredientWeight <= 0)
+                return;
+
+            int index = OriginalIngredients.IndexOf(SelectedOriginalIngredient);
+            if (index == -1) return;
+
+            Ingredient updatedIng;
+            if (SelectedIngredientType == "Глазур (Поверхня)")
+                updatedIng = new SurfaceIngredient { Name = NewIngredientName, Weight = NewIngredientWeight, Unit = SelectedUnit };
+            else if (SelectedIngredientType == "Крем між коржами")
+                updatedIng = new CreamIngredient { Name = NewIngredientName, Weight = NewIngredientWeight, Unit = SelectedUnit };
+            else
+                updatedIng = new VolumeIngredient { Name = NewIngredientName, Weight = NewIngredientWeight, Unit = SelectedUnit };
+
+            OriginalIngredients[index] = updatedIng;
+            
+            NewIngredientName = "";
+            UpdateTotals();
+        }
     }
 }
