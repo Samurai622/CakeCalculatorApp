@@ -20,6 +20,9 @@
                 <MenuItem Header="_Відкрити базу..." HotKey="Ctrl+O" InputGesture="Ctrl+O" Click="OpenFile_Click" />
                 <MenuItem Header="_Зберегти" HotKey="Ctrl+S" InputGesture="Ctrl+S" Click="SaveFile_Click" />
                 <Separator/>
+                <MenuItem Header="_Завантажити з хмари" Command="{Binding SyncFromCloudCommand}" ToolTip.Tip="Отримати найновіший рецепт" Margin="0,0,5,0"/>
+                <MenuItem Header="_Відправити в хмару" Command="{Binding UploadToCloudCommand}" ToolTip.Tip="Поділитися рецептом"/>
+                <Separator/>
                 <MenuItem Header="Вихід" HotKey="Alt+F4" InputGesture="Alt+F4" />
             </MenuItem>
             <MenuItem Header="_Дані">

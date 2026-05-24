@@ -98,7 +98,11 @@ namespace CakeCalculatorApp.ViewModels
         public MainWindowViewModel()
         {
             _localDatabase = new LocalJsonDatabaseService();
-            _cloudDatabase = new SupabaseDatabaseService("https://your-project.supabase.co", "your-anon-key");
+            
+            string supabaseUrl = "https://yvwqbaoqlicpnvmfcmrj.supabase.co";
+            string supabaseKey = "sb_publishable_Uga9iIl9o7O5c7bdZcz60g_F4kjPNMJ"; 
+            
+            _cloudDatabase = new SupabaseDatabaseService(supabaseUrl, supabaseKey);
             _calculatorService = new CakeCalculatorService();
         }
 
@@ -313,6 +317,77 @@ namespace CakeCalculatorApp.ViewModels
             {
                 Console.WriteLine($"Помилка завантаження: {ex.Message}");
                 Greeting = "Помилка завантаження файлу!";
+            }
+        }
+
+        [RelayCommand]
+        private async System.Threading.Tasks.Task SyncFromCloudAsync()
+        {
+            try
+            {
+                Greeting = "Завантаження з хмари...";
+                var recipes = (await _cloudDatabase.GetRecipesAsync()).ToList();
+
+                if (recipes.Count > 0)
+                {
+                    var loadedRecipe = recipes.Last();
+
+                    if (loadedRecipe.CakeShape is CylinderShape cyl)
+                    {
+                        SelectedOriginalShape = "Кругла";
+                        OriginalParam1 = cyl.Radius;
+                        OriginalHeight = cyl.Height;
+                    }
+                    else if (loadedRecipe.CakeShape is CuboidShape cub)
+                    {
+                        SelectedOriginalShape = "Прямокутна";
+                        OriginalParam1 = cub.Length;
+                        OriginalParam2 = cub.Width;
+                        OriginalHeight = cub.Height;
+                    }
+                    OriginalLayers = loadedRecipe.Layers;
+
+                    OriginalIngredients.Clear();
+                    foreach (var ing in loadedRecipe.Ingredients) OriginalIngredients.Add(ing);
+                    
+                    UpdateTotals();
+                    Greeting = "Успішно завантажено з Supabase!";
+                }
+                else
+                {
+                    Greeting = "Хмарна база порожня.";
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Greeting = "Помилка хмари!";
+            }
+        }
+
+        [RelayCommand]
+        private async System.Threading.Tasks.Task UploadToCloudAsync()
+        {
+            try
+            {
+                if (OriginalIngredients.Count == 0) return;
+                Greeting = "Відправка у хмару...";
+
+                var recipeToSave = new Recipe
+                {
+                    Name = "Рецепт зі спільноти",
+                    CakeShape = CreateShape(SelectedOriginalShape, OriginalParam1, OriginalParam2, OriginalHeight),
+                    Layers = OriginalLayers,
+                    Ingredients = OriginalIngredients.ToList()
+                };
+
+                await _cloudDatabase.SaveRecipeAsync(recipeToSave);
+                Greeting = "Успішно відправлено у Supabase!";
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Greeting = "Помилка відправки!";
             }
         }
     }
