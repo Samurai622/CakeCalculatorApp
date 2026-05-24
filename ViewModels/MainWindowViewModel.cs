@@ -16,8 +16,24 @@ namespace CakeCalculatorApp.ViewModels
         private readonly IDatabaseService _cloudDatabase;
         private readonly ICakeCalculatorService _calculatorService;
 
-        [ObservableProperty] private string _greeting = "Калькулятор Тортів (Офлайн)";
+        [ObservableProperty] private string _greeting = "Режим: Локальний файл (JSON)";
         [ObservableProperty] private bool _useCloudDatabase;
+
+        public string SyncModeButtonText => UseCloudDatabase ? "📂 Local Sync" : "☁️ Supabase Sync";
+        public string LoadButtonText => UseCloudDatabase ? "☁️ Завантажити з хмари" : "📂 Відкрити файл";
+        public string SaveButtonText => UseCloudDatabase ? "🚀 Відправити в хмару" : "💾 Зберегти файл";
+
+        [RelayCommand]
+        private void ToggleDatabaseMode()
+        {
+            UseCloudDatabase = !UseCloudDatabase;
+            
+            OnPropertyChanged(nameof(SyncModeButtonText));
+            OnPropertyChanged(nameof(LoadButtonText));
+            OnPropertyChanged(nameof(SaveButtonText));
+            
+            Greeting = UseCloudDatabase ? "Режим: Хмарна БД (Supabase)" : "Режим: Локальний файл (JSON)";
+        }
 
         public IDatabaseService CurrentDatabase => UseCloudDatabase ? _cloudDatabase : _localDatabase;
 

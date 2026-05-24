@@ -14,39 +14,57 @@ namespace CakeCalculatorApp.Views
 
         private MainWindowViewModel? ViewModel => DataContext as MainWindowViewModel;
 
-        private async void OpenFile_Click(object? sender, RoutedEventArgs e)
+        private async void ActionLoad_Click(object? sender, RoutedEventArgs e)
         {
-            var topLevel = TopLevel.GetTopLevel(this);
-            if (topLevel == null || ViewModel == null) return;
+            if (ViewModel == null) return;
 
-            var files = await topLevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+            if (ViewModel.UseCloudDatabase)
             {
-                Title = "Відкрити базу рецептів",
-                AllowMultiple = false,
-                FileTypeFilter = new[] { new FilePickerFileType("JSON Files") { Patterns = new[] { "*.json" } } }
-            });
+                await ViewModel.SyncFromCloudCommand.ExecuteAsync(null);
+            }
+            else
+            {
+                var topLevel = TopLevel.GetTopLevel(this);
+                if (topLevel == null) return;
 
-            if (files.Count >= 1)
-            {
-                await ViewModel.LoadRecipeFromFileAsync(files[0].Path.LocalPath);
+                var files = await topLevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+                {
+                    Title = "Відкрити базу рецептів",
+                    AllowMultiple = false,
+                    FileTypeFilter = new[] { new FilePickerFileType("JSON Files") { Patterns = new[] { "*.json" } } }
+                });
+
+                if (files.Count >= 1)
+                {
+                    await ViewModel.LoadRecipeFromFileAsync(files[0].Path.LocalPath);
+                }
             }
         }
 
-        private async void SaveFile_Click(object? sender, RoutedEventArgs e)
+        private async void ActionSave_Click(object? sender, RoutedEventArgs e)
         {
-            var topLevel = TopLevel.GetTopLevel(this);
-            if (topLevel == null || ViewModel == null) return;
+            if (ViewModel == null) return;
 
-            var file = await topLevel.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
+            if (ViewModel.UseCloudDatabase)
             {
-                Title = "Зберегти базу рецептів",
-                DefaultExtension = "json",
-                FileTypeChoices = new[] { new FilePickerFileType("JSON Files") { Patterns = new[] { "*.json" } } }
-            });
+                await ViewModel.UploadToCloudCommand.ExecuteAsync(null);
+            }
+            else
+            {
+                var topLevel = TopLevel.GetTopLevel(this);
+                if (topLevel == null) return;
 
-            if (file != null)
-            {
-                await ViewModel.SaveRecipeToFileAsync(file.Path.LocalPath);
+                var file = await topLevel.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
+                {
+                    Title = "Зберегти базу рецептів",
+                    DefaultExtension = "json",
+                    FileTypeChoices = new[] { new FilePickerFileType("JSON Files") { Patterns = new[] { "*.json" } } }
+                });
+
+                if (file != null)
+                {
+                    await ViewModel.SaveRecipeToFileAsync(file.Path.LocalPath);
+                }
             }
         }
 

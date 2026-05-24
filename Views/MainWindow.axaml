@@ -17,11 +17,8 @@
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_Файл">
-                <MenuItem Header="_Відкрити базу..." HotKey="Ctrl+O" InputGesture="Ctrl+O" Click="OpenFile_Click" />
-                <MenuItem Header="_Зберегти" HotKey="Ctrl+S" InputGesture="Ctrl+S" Click="SaveFile_Click" />
-                <Separator/>
-                <MenuItem Header="_Завантажити з хмари" Command="{Binding SyncFromCloudCommand}" ToolTip.Tip="Отримати найновіший рецепт" Margin="0,0,5,0"/>
-                <MenuItem Header="_Відправити в хмару" Command="{Binding UploadToCloudCommand}" ToolTip.Tip="Поділитися рецептом"/>
+                <MenuItem Header="{Binding LoadButtonText}" HotKey="Ctrl+O" InputGesture="Ctrl+O" Click="ActionLoad_Click" />
+                <MenuItem Header="{Binding SaveButtonText}" HotKey="Ctrl+S" InputGesture="Ctrl+S" Click="ActionSave_Click" />
                 <Separator/>
                 <MenuItem Header="Вихід" HotKey="Alt+F4" InputGesture="Alt+F4" />
             </MenuItem>
@@ -35,10 +32,12 @@
         </Menu>
 
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Background="#1AFFFFFF" Margin="5">
-            <Button Content="📂 Завантажити" ToolTip.Tip="Відкрити локальну базу рецептів" Margin="0,0,5,0" Click="OpenFile_Click"/>
-            <Button Content="💾 Зберегти" ToolTip.Tip="Зберегти поточні рецепти" Margin="0,0,5,0" Click="SaveFile_Click"/>
+            <Button Content="{Binding LoadButtonText}" Margin="0,0,5,0" Click="ActionLoad_Click" />
+            <Button Content="{Binding SaveButtonText}" Margin="0,0,5,0" Click="ActionSave_Click" />
+            
             <Separator Width="2" Background="Gray" Margin="5,0"/>
-            <Button Content="☁️ Supabase Sync" ToolTip.Tip="Синхронізація з хмарною спільнотою" />
+            
+            <Button Content="{Binding SyncModeButtonText}" Command="{Binding ToggleDatabaseModeCommand}" FontWeight="Bold" />
         </StackPanel>
 
         <Border DockPanel.Dock="Bottom" Background="#007ACC" Padding="10,5">
