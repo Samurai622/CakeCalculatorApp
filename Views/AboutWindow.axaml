@@ -7,11 +7,11 @@
         WindowStartupLocation="CenterOwner">
     
     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="10">
-        <Border Width="100" Height="100" Background="LightGray" CornerRadius="50">
-            <TextBlock Text="🧑‍💻" FontSize="50" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <Border Width="100" Height="100" CornerRadius="50" ClipToBounds="True">
+            <Image Source="avares://CakeCalculatorApp/Assets/avatar.png" Stretch="UniformToFill"/>
         </Border>
 
-        <TextBlock Text="Калькулятор Тортів (ООП)" FontWeight="Bold" FontSize="18" HorizontalAlignment="Center"/>
+        <TextBlock Text="Калькулятор Тортів" FontWeight="Bold" FontSize="18" HorizontalAlignment="Center"/>
         <TextBlock Text="Версія 1.0" HorizontalAlignment="Center" Foreground="Gray"/>
         <TextBlock Text="Розробник: Samurai625" HorizontalAlignment="Center"/>
         <TextBlock Text="Курс 2, Група KC-24" HorizontalAlignment="Center"/>

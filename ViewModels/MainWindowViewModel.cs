@@ -10,6 +10,10 @@ using CakeCalculatorApp.Services;
 
 namespace CakeCalculatorApp.ViewModels
 {
+    /// <summary>
+    /// Головний клас керування графічним інтерфейсом за патерном MVVM.
+    /// Зв'язує дані моделей із відображенням (Views) та обробляє команди користувача.
+    /// </summary>
     public partial class MainWindowViewModel : ViewModelBase
     {
         private readonly IDatabaseService _localDatabase;
@@ -134,6 +138,10 @@ namespace CakeCalculatorApp.ViewModels
             await LoadRecipesIntoDropdownAsync();
         }
 
+        /// <summary>
+        /// Асинхронно завантажує рецепти з активної бази даних (локальної або хмарної)
+        /// та наповнює ними випадаючий список в інтерфейсі користувача.
+        /// </summary>
         private async System.Threading.Tasks.Task LoadRecipesIntoDropdownAsync()
         {
             try
@@ -207,6 +215,10 @@ namespace CakeCalculatorApp.ViewModels
             };
         }
 
+        /// <summary>
+        /// Оновлює підсумкову масу всіх інгредієнтів у рецепті 
+        /// та керує станом видимості кнопок редагування в інтерфейсі.
+        /// </summary>
         private void UpdateTotals()
         {
             OriginalTotal = Math.Round(OriginalIngredients.Sum(i => i.Weight), 1);
@@ -229,6 +241,10 @@ namespace CakeCalculatorApp.ViewModels
             await LoadRecipesIntoDropdownAsync();
         }
 
+        /// <summary>
+        /// Команда, що ініціює процес розрахунку нових пропорцій торта.
+        /// Створює необхідні екземпляри форм та викликає сервіс калькуляції.
+        /// </summary>
         [RelayCommand]
         private void Calculate()
         {
@@ -258,6 +274,10 @@ namespace CakeCalculatorApp.ViewModels
             }
         }
 
+        /// <summary>
+        /// Команда: Сортує перерахований список інгредієнтів за спаданням їхньої ваги.
+        /// Задовольняє вимогу застосунку щодо сортування даних.
+        /// </summary>
         [RelayCommand]
         private void SortByWeight()
         {
@@ -267,6 +287,11 @@ namespace CakeCalculatorApp.ViewModels
             UpdateTotals();
         }
 
+        /// <summary>
+        /// Команда: Фільтрує перерахований список інгредієнтів, 
+        /// залишаючи лише тісто та начинки (об'ємні інгредієнти).
+        /// Задовольняє вимогу застосунку щодо фільтрації даних.
+        /// </summary>
         [RelayCommand]
         private void FilterVolumeOnly()
         {
@@ -276,6 +301,10 @@ namespace CakeCalculatorApp.ViewModels
             UpdateTotals();
         }
 
+        /// <summary>
+        /// Команда: Додає новий інгредієнт до оригінального рецепта.
+        /// Тип інгредієнта (клас) обирається динамічно на основі значення з ComboBox.
+        /// </summary>
         [RelayCommand]
         private void AddIngredient()
         {
@@ -295,6 +324,10 @@ namespace CakeCalculatorApp.ViewModels
             UpdateTotals(); 
         }
 
+        /// <summary>
+        /// Команда: Видаляє вибраний інгредієнт з рецепта (Delete).
+        /// Оновлює підсумкову інформацію (загальну вагу) після видалення.
+        /// </summary>
         [RelayCommand]
         private void DeleteSelectedIngredient()
         {
@@ -313,6 +346,9 @@ namespace CakeCalculatorApp.ViewModels
             UpdateTotals();
         }
 
+        /// <summary>
+        /// Команда: Завантажує дані вибраного інгредієнта у поля вводу для подальшого редагування (Update).
+        /// </summary>
         [RelayCommand]
         private void LoadForEdit()
         {

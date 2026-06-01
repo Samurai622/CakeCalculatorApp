@@ -5,6 +5,11 @@ using CakeCalculatorApp.ViewModels;
 
 namespace CakeCalculatorApp.Views
 {
+    /// <summary>
+    /// Головне вікно застосунку.
+    /// Відповідає за ініціалізацію XAML-розмітки та обробку системних діалогових вікон ОС 
+    /// (вибір файлів для збереження та завантаження), що вимагають доступу до візуального дерева.
+    /// </summary>
     public partial class MainWindow : Window
     {
         public MainWindow()
@@ -14,6 +19,10 @@ namespace CakeCalculatorApp.Views
 
         private MainWindowViewModel? ViewModel => DataContext as MainWindowViewModel;
 
+        /// <summary>
+        /// Обробник події кліку на кнопку "Відкрити базу/файл".
+        /// Відкриває системний діалог OpenFileDialog через сучасний API StorageProvider.
+        /// </summary>
         private async void ActionLoad_Click(object? sender, RoutedEventArgs e)
         {
             if (ViewModel == null) return;
@@ -41,6 +50,10 @@ namespace CakeCalculatorApp.Views
             }
         }
 
+        /// <summary>
+        /// Обробник події кліку на кнопку "Зберегти файл".
+        /// Відкриває системний діалог SaveFileDialog та повертає шлях до обраного файлу у ViewModel.
+        /// </summary>
         private async void ActionSave_Click(object? sender, RoutedEventArgs e)
         {
             if (ViewModel == null) return;
@@ -68,6 +81,10 @@ namespace CakeCalculatorApp.Views
             }
         }
 
+        /// <summary>
+        /// Обробник події кліку "Про програму".
+        /// Відкриває модальне діалогове вікно (AboutWindow) з інформацією про розробника.
+        /// </summary>
         private async void About_Click(object? sender, RoutedEventArgs e)
         {
             var aboutWindow = new AboutWindow();

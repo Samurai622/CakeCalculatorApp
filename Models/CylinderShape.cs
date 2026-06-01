@@ -2,7 +2,11 @@ using System;
 using System.Text.Json.Serialization;
 
 namespace CakeCalculatorApp.Models
-{
+{   
+    /// <summary>
+    /// Клас, що описує форму класичного круглого торта (геометричний циліндр).
+    /// Успадковує базовий клас Shape та реалізує його абстрактні методи.
+    /// </summary>
     public class CylinderShape : Shape
     {
         public double Radius { get; set; }

@@ -4,6 +4,10 @@ using CakeCalculatorApp.Models;
 
 namespace CakeCalculatorApp.Services
 {
+    /// <summary>
+    /// Сервіс, що містить математичні алгоритми обчислення коефіцієнтів 
+    /// масштабування (за об'ємом, площею та кількістю прошарків крему).
+    /// </summary>
     public class CakeCalculatorService : ICakeCalculatorService
     {
         public Recipe CalculateNewRecipe(Recipe originalRecipe, Shape targetShape, int targetLayers, bool excludeSurface)

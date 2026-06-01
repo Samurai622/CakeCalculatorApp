@@ -3,6 +3,10 @@ using System.Text.Json.Serialization;
 
 namespace CakeCalculatorApp.Models
 {
+    /// <summary>
+    /// Клас, що описує форму класичного прямокутного торта (геометричний паралелепіпед).
+    /// Успадковує базовий клас Shape та реалізує його абстрактні методи.
+    /// </summary>
     public class CuboidShape : Shape
     {
         public double Length { get; set; }

@@ -6,6 +6,10 @@ using CakeCalculatorApp.Models;
 
 namespace CakeCalculatorApp.Data
 {
+    /// <summary>
+    /// Сервіс хмарної бази даних. Здійснює асинхронну синхронізацію 
+    /// рецептів з віддаленим сервером PostgreSQL (платформа Supabase) через DTO-моделі.
+    /// </summary>
     public class SupabaseDatabaseService : IDatabaseService
     {
         private readonly Supabase.Client _supabaseClient;

@@ -7,6 +7,10 @@ using CakeCalculatorApp.Models;
 
 namespace CakeCalculatorApp.Data
 {
+    /// <summary>
+    /// Сервіс локальної бази даних. Серіалізує об'єкти у JSON-формат 
+    /// та зберігає їх у файловій системі комп'ютера.
+    /// </summary>
     public class LocalJsonDatabaseService : IDatabaseService
     {
         private readonly string _filePath;

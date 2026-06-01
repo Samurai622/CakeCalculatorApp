@@ -4,6 +4,10 @@ namespace CakeCalculatorApp.Models
 {
     public class CreamIngredient : Ingredient
     {
+        /// <summary>
+        /// Перевизначений метод масштабування. 
+        /// Використовує відповідний коефіцієнт для перерахунку власної ваги.
+        /// </summary>
         public override void Scale(double volumeRatio, double areaRatio, double creamRatio)
         {
             Weight = Math.Round(Weight * creamRatio, 1);
